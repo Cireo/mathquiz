@@ -8,6 +8,9 @@ class Game {
         this.storage = new Storage();
         this.animations = new Animations();
         
+        // Initialize minigame
+        this.minigame = new Minigame(this);
+        
         // Initialize UI after other components
         this.ui = new UIController(this);
         
@@ -250,23 +253,39 @@ class Game {
      */
     checkLevelUp() {
         if (this.gameState.currentLevelProgress >= this.gameState.problemsPerLevel) {
-            this.levelUp();
+            this.triggerMinigame();
         }
     }
 
     /**
-     * Handle level up
+     * Trigger minigame at end of level
+     */
+    triggerMinigame() {
+        // Pause main game temporarily
+        this.gameState.isActive = false;
+        
+        // Show level completion message briefly
+        if (this.animations.isAnimationEnabled()) {
+            this.animations.showLevelUp(this.gameState.level + 1);
+        }
+        
+        // Start minigame after short delay
+        setTimeout(() => {
+            this.minigame.startMinigame(this.gameState.difficulty);
+        }, 2000);
+        
+        console.log(`🎯 Level ${this.gameState.level} completed! Starting minigame...`);
+    }
+
+    /**
+     * Handle level up (called after minigame completion)
      */
     levelUp() {
         this.gameState.level++;
         this.gameState.currentLevelProgress = 0;
+        this.gameState.isActive = true; // Resume main game
         
-        // Show level up animation
-        if (this.animations.isAnimationEnabled()) {
-            this.animations.showLevelUp(this.gameState.level);
-        }
-        
-        console.log(`🎉 Level up! Now level ${this.gameState.level}`);
+        console.log(`🎉 Advanced to level ${this.gameState.level}!`);
     }
 
     /**

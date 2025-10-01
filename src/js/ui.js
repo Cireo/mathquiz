@@ -39,7 +39,8 @@ class UIController {
             bestStreakElement: document.getElementById('best-streak'),
             problemsSolvedElement: document.getElementById('problems-solved'),
             playAgainButton: document.getElementById('play-again-btn'),
-            changeLevelButton: document.getElementById('change-level-btn')
+            changeLevelButton: document.getElementById('change-level-btn'),
+            continueQuestButton: document.getElementById('continue-quest-btn')
         };
     }
 
@@ -78,6 +79,10 @@ class UIController {
 
         this.elements.changeLevelButton.addEventListener('click', () => {
             this.handleChangeLevel();
+        });
+
+        this.elements.continueQuestButton.addEventListener('click', () => {
+            this.handleContinueQuest();
         });
 
         // Keyboard shortcuts
@@ -164,6 +169,17 @@ class UIController {
         if (this.game && typeof this.game.resetGame === 'function') {
             this.game.resetGame();
         }
+    }
+
+    /**
+     * Handle continue quest button (after minigame or level completion)
+     */
+    handleContinueQuest() {
+        if (this.game && typeof this.game.restartGame === 'function') {
+            // Continue with current difficulty level
+            this.game.restartGame();
+        }
+        this.showGameScreen();
     }
 
     /**

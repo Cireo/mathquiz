@@ -77,6 +77,54 @@
         </div>
     </div>
 
+    <!-- Minigame Screen -->
+    <div id="minigame-screen" class="screen">
+        <div class="minigame-container">
+            <div class="minigame-header">
+                <h2 class="minigame-title">🦊 Player's Math Battle! 🧙‍♀️</h2>
+                <div class="minigame-stats">
+                    <div class="fox-health">
+                        <span class="health-label">Fox Health:</span>
+                        <div class="health-bar">
+                            <div id="fox-health-fill" class="health-fill"></div>
+                        </div>
+                    </div>
+                    <div class="spells-remaining">
+                        <span id="spells-count">5</span> spells remaining
+                    </div>
+                </div>
+            </div>
+
+            <div class="battle-arena">
+                <!-- Fox Character -->
+                <div id="fox-character" class="character fox">
+                    <div class="character-sprite">🦊</div>
+                    <div class="character-name">Player</div>
+                </div>
+
+                <!-- Battle Field -->
+                <div id="battle-field" class="battle-field">
+                    <!-- Math spell projectiles will appear here -->
+                </div>
+
+                <!-- Witch Character -->
+                <div id="witch-character" class="character witch">
+                    <div class="character-sprite">🧙‍♀️</div>
+                    <div class="character-name">Math Witch</div>
+                </div>
+            </div>
+
+            <!-- Answer Input for Minigame -->
+            <div class="minigame-input">
+                <input type="number" id="minigame-answer" placeholder="Quick! Type answer..." autofocus>
+                <div id="current-spell" class="current-spell-display">Incoming spell: 7 + 3 = ?</div>
+            </div>
+
+            <!-- Minigame Feedback -->
+            <div id="minigame-feedback" class="minigame-feedback"></div>
+        </div>
+    </div>
+
     <!-- Results Screen -->
     <div id="results-screen" class="screen">
         <div class="container">
@@ -98,6 +146,7 @@
             <div class="results-actions">
                 <button id="play-again-btn" class="action-button">Play Again! 🎮</button>
                 <button id="change-level-btn" class="action-button">Change Level 📊</button>
+                <button id="continue-quest-btn" class="action-button">Continue Quest! ⚔️</button>
             </div>
         </div>
     </div>
@@ -106,6 +155,7 @@
     <script src="src/js/math-engine.js"></script>
     <script src="src/js/storage.js"></script>
     <script src="src/js/animations.js"></script>
+    <script src="src/js/minigame.js"></script>
     <script src="src/js/ui.js"></script>
     <script src="src/js/game.js"></script>
 </body>
