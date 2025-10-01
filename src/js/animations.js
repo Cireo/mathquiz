@@ -437,6 +437,12 @@ class Animations {
             case 'high_score':
                 this.createConfetti(100);
                 break;
+            case 'secret_battle':
+                this.createConfetti(150, 4000); // Extra confetti for secret!
+                break;
+            case 'minigame_victory':
+                this.createConfetti(80);
+                break;
             default:
                 this.createConfetti(30);
         }

@@ -6,6 +6,11 @@ class UIController {
     constructor(gameInstance) {
         this.game = gameInstance;
         this.elements = this.initializeElements();
+        
+        // Secret easter egg tracking
+        this.secretFireClicks = 0;
+        this.secretClickTimer = null;
+        
         this.bindEvents();
     }
 
@@ -33,6 +38,7 @@ class UIController {
             submitButton: document.getElementById('submit-btn'),
             feedbackElement: document.getElementById('feedback'),
             achievementElement: document.getElementById('achievement'),
+            streakFireElement: document.getElementById('streak-fire'),
 
             // Results screen elements
             finalScoreElement: document.getElementById('final-score'),
@@ -84,6 +90,13 @@ class UIController {
         this.elements.continueQuestButton.addEventListener('click', () => {
             this.handleContinueQuest();
         });
+
+        // Secret easter egg: Fire click counter
+        if (this.elements.streakFireElement) {
+            this.elements.streakFireElement.addEventListener('click', (e) => {
+                this.handleSecretFireClick(e);
+            });
+        }
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
@@ -180,6 +193,108 @@ class UIController {
             this.game.restartGame();
         }
         this.showGameScreen();
+    }
+
+    /**
+     * Handle secret fire click easter egg
+     * @param {Event} e - Click event
+     */
+    handleSecretFireClick(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        // Increment click counter
+        this.secretFireClicks++;
+        
+        // Visual feedback for each click
+        this.elements.streakFireElement.classList.add('secret-active');
+        setTimeout(() => {
+            this.elements.streakFireElement.classList.remove('secret-active');
+        }, 300);
+
+        // Reset timer - user has 3 seconds between clicks
+        if (this.secretClickTimer) {
+            clearTimeout(this.secretClickTimer);
+        }
+        
+        this.secretClickTimer = setTimeout(() => {
+            this.secretFireClicks = 0;
+        }, 3000);
+
+        // Check if secret activated
+        if (this.secretFireClicks >= 5) {
+            this.activateSecretBattle();
+        }
+
+        console.log(`🔥 Secret fire clicks: ${this.secretFireClicks}/5`);
+    }
+
+    /**
+     * Activate secret battle minigame
+     */
+    activateSecretBattle() {
+        // Reset click counter
+        this.secretFireClicks = 0;
+        if (this.secretClickTimer) {
+            clearTimeout(this.secretClickTimer);
+        }
+
+        // Show special activation message
+        this.showSecretActivationFeedback();
+        
+        // Trigger minigame after short delay
+        setTimeout(() => {
+            if (this.game && this.game.minigame) {
+                // Use current difficulty or default to intermediate for secret battles
+                const difficulty = this.game.gameState.difficulty || 'intermediate';
+                this.game.minigame.startMinigame(difficulty);
+                
+                console.log('🎉 Secret battle activated! 🦊⚔️🧙‍♀️');
+            }
+        }, 1500);
+    }
+
+    /**
+     * Show special feedback for secret activation
+     */
+    showSecretActivationFeedback() {
+        // Create special secret activation message
+        const secretMessage = document.createElement('div');
+        secretMessage.className = 'secret-activation-message';
+        secretMessage.innerHTML = '🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 Player vs Math Witch! 🧙‍♀️';
+        
+        // Style it
+        secretMessage.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            z-index: 10000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        `;
+        
+        document.body.appendChild(secretMessage);
+        
+        // Create fire particles around the message
+        if (this.game && this.game.animations) {
+            this.game.animations.celebrate('secret_battle');
+        }
+
+        // Remove message after delay
+        setTimeout(() => {
+            if (secretMessage.parentNode) {
+                secretMessage.parentNode.removeChild(secretMessage);
+            }
+        }, 2000);
     }
 
     /**
