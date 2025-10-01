@@ -279,12 +279,14 @@ class UIController {
             font-size: 1.5rem;
             font-weight: bold;
             text-align: center;
-            z-index: 10000;
+            z-index: 10001;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
             animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
         `;
         
+        // Append to body to ensure it's always visible and centered
         document.body.appendChild(secretMessage);
         
         // Create fire particles around the message
@@ -292,11 +294,13 @@ class UIController {
             this.game.animations.celebrate('secret_battle');
         }
 
-        // Remove message after delay
+        // Remove message after delay and then start battle
         setTimeout(() => {
             if (secretMessage.parentNode) {
                 secretMessage.parentNode.removeChild(secretMessage);
             }
+            // Start the battle after message disappears
+            this.game.minigame.startMinigame();
         }, 2000);
     }
 

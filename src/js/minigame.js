@@ -16,6 +16,7 @@ class Minigame {
         this.spellProjectiles = [];
         this.difficulty = 'beginner';
         this.spellSpeed = 4000; // milliseconds for spell to cross screen
+        this.isProcessingCollision = false; // Prevent multiple simultaneous collision processing
         
         // Multiple choice state
         this.currentSpellType = 'input'; // 'input' or 'choice'
@@ -345,6 +346,12 @@ class Minigame {
      * @param {HTMLElement} answerElement - The caught answer element
      */
     handleCorrectCatch(answerElement) {
+        if (this.isProcessingCollision) {
+            console.log('🚫 Already processing collision, ignoring duplicate correct catch');
+            return;
+        }
+        this.isProcessingCollision = true;
+        
         // Visual feedback
         answerElement.classList.add('correct-caught');
         
@@ -361,6 +368,7 @@ class Minigame {
         }
         
         setTimeout(() => {
+            this.isProcessingCollision = false;
             if (this.spellsRemaining > 0) {
                 this.castFirstSpell();
             } else {
@@ -374,6 +382,12 @@ class Minigame {
      * @param {HTMLElement} answerElement - The caught wrong answer element
      */
     handleIncorrectCatch(answerElement) {
+        if (this.isProcessingCollision) {
+            console.log('🚫 Already processing collision, ignoring duplicate incorrect catch');
+            return;
+        }
+        this.isProcessingCollision = true;
+        
         // Visual feedback
         answerElement.classList.add('incorrect-caught');
         
@@ -388,6 +402,7 @@ class Minigame {
         this.animateFoxHurt();
         
         setTimeout(() => {
+            this.isProcessingCollision = false;
             if (this.foxHealth <= 0) {
                 this.defeat();
             } else if (this.isActive && this.spellsRemaining > 0) {
@@ -400,6 +415,12 @@ class Minigame {
      * Handle case where fox misses all answers
      */
     handleMissedAnswers() {
+        if (this.isProcessingCollision) {
+            console.log('🚫 Already processing collision, ignoring missed answers');
+            return;
+        }
+        this.isProcessingCollision = true;
+        
         // Find the correct answer for feedback
         const correctAnswer = Object.values(this.choiceOptions).find(opt => opt.isCorrect).value;
         this.showFeedback(false, correctAnswer);
@@ -411,6 +432,7 @@ class Minigame {
         this.animateFoxHurt();
         
         setTimeout(() => {
+            this.isProcessingCollision = false;
             if (this.foxHealth <= 0) {
                 this.defeat();
             } else if (this.isActive && this.spellsRemaining > 0) {
