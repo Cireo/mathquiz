@@ -24,6 +24,9 @@ class Minigame {
         this.choiceOptions = [];
         this.correctChoicePosition = 'middle';
         this.hasSpedUp = false; // Track if flying answers have been sped up
+        this.spellStartTime = 0; // Track when current spell animation started
+        this.collisionTimeout = null; // Timeout for collision detection
+        this.cleanupTimeout = null; // Timeout for cleanup
         
         // DOM elements
         this.initializeElements();
@@ -133,17 +136,53 @@ class Minigame {
         
         console.log('⚡ Speeding up flying answers!');
         
-        // Set much faster animation speed (reduce to 25% of original time)
-        const fastSpeed = Math.max(500, this.spellSpeed * 0.25);
-        document.documentElement.style.setProperty('--spell-speed', `${fastSpeed}ms`);
+        // Calculate how much time has elapsed since animation started
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - this.spellStartTime;
+        const progress = Math.min(elapsedTime / this.spellSpeed, 1);
         
-        // Update all flying answers to use the new speed
+        console.log(`Animation progress: ${(progress * 100).toFixed(1)}%`);
+        
+        // Calculate remaining time at normal speed
+        const remainingTime = this.spellSpeed - elapsedTime;
+        
+        // Speed up the remaining time (reduce to 25% of remaining time)
+        const speedUpFactor = 0.25;
+        const newRemainingTime = Math.max(200, remainingTime * speedUpFactor);
+        
+        console.log(`Remaining time: ${remainingTime}ms → ${newRemainingTime}ms`);
+        
+        // Update CSS variable for any new elements
+        document.documentElement.style.setProperty('--spell-speed', `${newRemainingTime}ms`);
+        
+        // Update all flying answers to use the new remaining duration
         flyingAnswers.forEach(answer => {
-            // Force restart animation with new speed
-            answer.style.animation = 'none';
-            answer.offsetHeight; // Force reflow
-            answer.style.animation = `flyHorizontal ${fastSpeed}ms linear forwards`;
+            // Instead of restarting, just change the animation-duration
+            // This preserves the current position and speeds up from there
+            answer.style.animationDuration = `${newRemainingTime}ms`;
         });
+        
+        // Update collision timing to match new speed
+        if (this.collisionTimeout) {
+            clearTimeout(this.collisionTimeout);
+        }
+        
+        this.collisionTimeout = setTimeout(() => {
+            flyingAnswers.forEach(answer => {
+                if (answer.parentNode) { // Still exists
+                    this.checkAnswerCollision(answer);
+                }
+            });
+        }, newRemainingTime - 100); // Check collision slightly before end
+        
+        // Update cleanup timing
+        if (this.cleanupTimeout) {
+            clearTimeout(this.cleanupTimeout);
+        }
+        
+        this.cleanupTimeout = setTimeout(() => {
+            this.handleMissedAnswers();
+        }, newRemainingTime + 200);
         
         // Mark as sped up to prevent multiple calls
         this.hasSpedUp = true;
@@ -341,6 +380,9 @@ class Minigame {
         const positions = ['high', 'middle', 'low'];
         const spellSpeedMs = this.spellSpeed;
         
+        // Record when this spell animation starts
+        this.spellStartTime = Date.now();
+        
         // Set CSS variable for animation duration
         document.documentElement.style.setProperty('--spell-speed', `${spellSpeedMs}ms`);
         
@@ -354,15 +396,20 @@ class Minigame {
             flyingAnswer.dataset.isCorrect = answer.isCorrect;
             
             this.elements.battleField.appendChild(flyingAnswer);
-            
-            // Check for collision when answer reaches fox position
-            setTimeout(() => {
-                this.checkAnswerCollision(flyingAnswer);
-            }, spellSpeedMs - 500); // Check collision slightly before end
         });
         
+        // Set up collision detection timing
+        this.collisionTimeout = setTimeout(() => {
+            const flyingAnswers = document.querySelectorAll('.flying-answer');
+            flyingAnswers.forEach(answer => {
+                if (answer.parentNode) { // Still exists
+                    this.checkAnswerCollision(answer);
+                }
+            });
+        }, spellSpeedMs - 500); // Check collision slightly before end
+        
         // Auto-end spell if nothing is caught
-        setTimeout(() => {
+        this.cleanupTimeout = setTimeout(() => {
             if (this.isActive && this.currentSpellType === 'choice') {
                 this.handleMissedAnswers();
             }
@@ -499,6 +546,16 @@ class Minigame {
      * Clear all flying answers from the screen
      */
     clearFlyingAnswers() {
+        // Clear any pending timeouts
+        if (this.collisionTimeout) {
+            clearTimeout(this.collisionTimeout);
+            this.collisionTimeout = null;
+        }
+        if (this.cleanupTimeout) {
+            clearTimeout(this.cleanupTimeout);
+            this.cleanupTimeout = null;
+        }
+        
         const flyingAnswers = this.elements.battleField.querySelectorAll('.flying-answer');
         flyingAnswers.forEach(answer => {
             if (answer.parentNode) {
