@@ -40,6 +40,13 @@ class LessonsManager {
             nextStepBtn: document.getElementById('next-step-btn'),
             completeLessonBtn: document.getElementById('complete-lesson-btn')
         };
+        
+        // Debug: Check if elements exist
+        Object.entries(this.elements).forEach(([key, element]) => {
+            if (!element || (element.length !== undefined && element.length === 0)) {
+                console.warn(`LessonsManager: Element '${key}' not found`);
+            }
+        });
     }
 
     /**
@@ -47,9 +54,15 @@ class LessonsManager {
      */
     bindEvents() {
         // Main navigation
-        this.elements.lessonsBtn.addEventListener('click', () => this.showLessonsScreen());
-        this.elements.backToMenuBtn.addEventListener('click', () => this.backToMenu());
-        this.elements.backToLessonsBtn.addEventListener('click', () => this.backToLessons());
+        if (this.elements.lessonsBtn) {
+            this.elements.lessonsBtn.addEventListener('click', () => this.showLessonsScreen());
+        }
+        if (this.elements.backToMenuBtn) {
+            this.elements.backToMenuBtn.addEventListener('click', () => this.backToMenu());
+        }
+        if (this.elements.backToLessonsBtn) {
+            this.elements.backToLessonsBtn.addEventListener('click', () => this.backToLessons());
+        }
         
         // Lesson selection
         this.elements.lessonCards.forEach(card => {
@@ -60,9 +73,15 @@ class LessonsManager {
         });
         
         // Lesson navigation
-        this.elements.prevStepBtn.addEventListener('click', () => this.previousStep());
-        this.elements.nextStepBtn.addEventListener('click', () => this.nextStep());
-        this.elements.completeLessonBtn.addEventListener('click', () => this.completeLesson());
+        if (this.elements.prevStepBtn) {
+            this.elements.prevStepBtn.addEventListener('click', () => this.previousStep());
+        }
+        if (this.elements.nextStepBtn) {
+            this.elements.nextStepBtn.addEventListener('click', () => this.nextStep());
+        }
+        if (this.elements.completeLessonBtn) {
+            this.elements.completeLessonBtn.addEventListener('click', () => this.completeLesson());
+        }
     }
 
     /**
@@ -303,12 +322,10 @@ class LessonsManager {
                                 <div class="explanation">
                                     Sometimes we need to <span class="highlight">"borrow"</span> from the tens place.
                                 </div>
-                                <div class="math-example">
-                                      52<br>
-                                    - 27<br>
-                                    ----<br>
-                                      25
-                                </div>
+                                <div class="vertical-math">  52
+- 27
+----
+  25</div>
                                 <div class="explanation">
                                     Can't do 2 - 7, so borrow: 12 - 7 = 5, and 4 - 2 = 2
                                 </div>
