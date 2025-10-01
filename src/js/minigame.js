@@ -810,7 +810,12 @@ class Minigame {
      */
     animateFoxCelebrate() {
         if (this.animations.isAnimationEnabled()) {
-            this.elements.foxCharacter.style.animation = 'characterCelebrate 0.8s ease-out';
+            // Use position-specific celebration animation
+            const celebrationAnimation = `characterCelebrate${this.foxPosition.charAt(0).toUpperCase() + this.foxPosition.slice(1)}`;
+            this.elements.foxCharacter.style.animation = `${celebrationAnimation} 0.8s ease-out`;
+            
+            console.log(`🎉 Fox celebrating with ${celebrationAnimation} at position ${this.foxPosition}`);
+            
             setTimeout(() => {
                 // Reset to position-appropriate animation
                 this.resetFoxAnimation();
@@ -823,7 +828,12 @@ class Minigame {
      */
     animateFoxHurt() {
         if (this.animations.isAnimationEnabled()) {
-            this.elements.foxCharacter.style.animation = 'characterHurt 0.6s ease-out';
+            // Use position-specific hurt animation
+            const hurtAnimation = `characterHurt${this.foxPosition.charAt(0).toUpperCase() + this.foxPosition.slice(1)}`;
+            this.elements.foxCharacter.style.animation = `${hurtAnimation} 0.6s ease-out`;
+            
+            console.log(`💥 Fox hurt with ${hurtAnimation} at position ${this.foxPosition}`);
+            
             setTimeout(() => {
                 // Reset to position-appropriate animation
                 this.resetFoxAnimation();
