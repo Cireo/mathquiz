@@ -924,22 +924,22 @@ class Minigame {
         // Hide minigame screen first
         this.elements.screen.classList.remove('active');
         
-        // Update main game UI
-        this.game.updateUI();
-        
-        // Show game screen or level up message
-        this.game.ui.showGameScreen();
-        
         // Continue with next level or show appropriate screen
         if (this.game.gameState.currentLevelProgress >= this.game.gameState.problemsPerLevel) {
             // Start next level
             this.game.levelUp();
+            
+            // Generate new problem immediately before showing UI
+            this.game.generateNewProblem();
         }
         
-        // Generate new problem for main game
-        setTimeout(() => {
-            this.game.generateNewProblem();
-        }, 500);
+        // Update main game UI (now with new problem if leveled up)
+        this.game.updateUI();
+        
+        // Show game screen
+        this.game.ui.showGameScreen();
+        
+        console.log('🎮 Returned to main game');
     }
 
     /**
