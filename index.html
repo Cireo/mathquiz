@@ -116,8 +116,32 @@
 
             <!-- Answer Input for Minigame -->
             <div class="minigame-input">
-                <input type="number" id="minigame-answer" placeholder="Quick! Type answer..." autofocus>
-                <div id="current-spell" class="current-spell-display">Incoming spell: 7 + 3 = ?</div>
+                <!-- Regular input spell -->
+                <div id="input-spell-mode" class="spell-mode">
+                    <input type="number" id="minigame-answer" placeholder="Quick! Type answer..." autofocus>
+                    <button id="minigame-submit" class="minigame-submit-button">Defend! ⚔️</button>
+                    <div id="current-spell" class="current-spell-display">Incoming spell: 7 + 3 = ?</div>
+                </div>
+
+                <!-- Multiple choice spell -->
+                <div id="choice-spell-mode" class="spell-mode hidden">
+                    <div class="choice-spell-equation" id="choice-equation">5 × 4 = ?</div>
+                    <div class="choice-options">
+                        <div class="choice-option" id="choice-high" data-position="high">
+                            <span class="choice-label">↑</span>
+                            <span class="choice-value">25</span>
+                        </div>
+                        <div class="choice-option fox-position" id="choice-middle" data-position="middle">
+                            <span class="choice-label">🦊</span>
+                            <span class="choice-value">20</span>
+                        </div>
+                        <div class="choice-option" id="choice-low" data-position="low">
+                            <span class="choice-label">↓</span>
+                            <span class="choice-value">15</span>
+                        </div>
+                    </div>
+                    <div class="choice-instructions">Use ↑↓ arrow keys to move the fox!</div>
+                </div>
             </div>
 
             <!-- Minigame Feedback -->

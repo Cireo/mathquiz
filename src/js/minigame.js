@@ -17,6 +17,12 @@ class Minigame {
         this.difficulty = 'beginner';
         this.spellSpeed = 4000; // milliseconds for spell to cross screen
         
+        // Multiple choice state
+        this.currentSpellType = 'input'; // 'input' or 'choice'
+        this.foxPosition = 'middle'; // 'high', 'middle', 'low'
+        this.choiceOptions = [];
+        this.correctChoicePosition = 'middle';
+        
         // DOM elements
         this.initializeElements();
         this.bindEvents();
@@ -33,8 +39,20 @@ class Minigame {
             foxCharacter: document.getElementById('fox-character'),
             witchCharacter: document.getElementById('witch-character'),
             battleField: document.getElementById('battle-field'),
+            
+            // Input spell elements
+            inputSpellMode: document.getElementById('input-spell-mode'),
             answerInput: document.getElementById('minigame-answer'),
+            submitButton: document.getElementById('minigame-submit'),
             currentSpellDisplay: document.getElementById('current-spell'),
+            
+            // Choice spell elements
+            choiceSpellMode: document.getElementById('choice-spell-mode'),
+            choiceEquation: document.getElementById('choice-equation'),
+            choiceHigh: document.getElementById('choice-high'),
+            choiceMiddle: document.getElementById('choice-middle'),
+            choiceLow: document.getElementById('choice-low'),
+            
             feedback: document.getElementById('minigame-feedback')
         };
     }
@@ -43,19 +61,50 @@ class Minigame {
      * Bind minigame event listeners
      */
     bindEvents() {
-        // Handle minigame answer input
+        // Handle minigame answer input (for input spells)
         this.elements.answerInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' && this.currentSpellType === 'input') {
+                this.handleSpellDefense();
+            }
+        });
+
+        // Handle submit button click (for input spells)
+        this.elements.submitButton.addEventListener('click', () => {
+            if (this.currentSpellType === 'input') {
                 this.handleSpellDefense();
             }
         });
 
         this.elements.answerInput.addEventListener('input', () => {
             // Visual feedback on input
-            if (this.elements.answerInput.value) {
+            const hasValue = this.elements.answerInput.value.trim() !== '';
+            this.elements.submitButton.disabled = !hasValue;
+            
+            if (hasValue) {
                 this.elements.answerInput.style.borderColor = '#4ecdc4';
             } else {
                 this.elements.answerInput.style.borderColor = '#ffd700';
+            }
+        });
+
+        // Handle arrow keys for choice spells
+        document.addEventListener('keydown', (e) => {
+            if (this.isActive && this.currentSpellType === 'choice') {
+                switch (e.key) {
+                    case 'ArrowUp':
+                        e.preventDefault();
+                        this.moveFox('up');
+                        break;
+                    case 'ArrowDown':
+                        e.preventDefault();
+                        this.moveFox('down');
+                        break;
+                    case 'Enter':
+                    case ' ':
+                        e.preventDefault();
+                        this.selectCurrentChoice();
+                        break;
+                }
             }
         });
     }
@@ -134,20 +183,305 @@ class Minigame {
             return;
         }
 
+        // Randomly choose spell type (70% input, 30% choice)
+        this.currentSpellType = Math.random() < 0.7 ? 'input' : 'choice';
+
         // Generate new math problem
         this.mathEngine.setDifficulty(this.difficulty);
         this.currentSpell = this.mathEngine.generateProblem();
         
-        // Update display
-        this.elements.currentSpellDisplay.textContent = `Incoming spell: ${this.currentSpell.question}`;
-        this.elements.answerInput.value = '';
-        this.elements.answerInput.focus();
+        if (this.currentSpellType === 'input') {
+            this.setupInputSpell();
+        } else {
+            this.setupChoiceSpell();
+        }
         
         // Create spell projectile
         this.createSpellProjectile();
         
         // Animate witch casting
         this.animateWitchCast();
+    }
+
+    /**
+     * Set up input-based spell
+     */
+    setupInputSpell() {
+        // Show input mode, hide choice mode
+        this.elements.inputSpellMode.classList.remove('hidden');
+        this.elements.choiceSpellMode.classList.add('hidden');
+        
+        // Update display
+        this.elements.currentSpellDisplay.textContent = `Incoming spell: ${this.currentSpell.question}`;
+        this.elements.answerInput.value = '';
+        this.elements.submitButton.disabled = true;
+        this.elements.answerInput.focus();
+    }
+
+    /**
+     * Set up choice-based spell with wrong answers
+     */
+    setupChoiceSpell() {
+        // Show choice mode, hide input mode
+        this.elements.inputSpellMode.classList.add('hidden');
+        this.elements.choiceSpellMode.classList.remove('hidden');
+        
+        // Update equation display
+        this.elements.choiceEquation.textContent = this.currentSpell.question;
+        
+        // Generate wrong answers
+        this.choiceOptions = this.generateChoiceOptions(this.currentSpell);
+        
+        // Reset fox position to middle
+        this.foxPosition = 'middle';
+        this.updateFoxPosition();
+        
+        // Update choice displays
+        this.elements.choiceHigh.querySelector('.choice-value').textContent = this.choiceOptions.high.value;
+        this.elements.choiceMiddle.querySelector('.choice-value').textContent = this.choiceOptions.middle.value;
+        this.elements.choiceLow.querySelector('.choice-value').textContent = this.choiceOptions.low.value;
+        
+        // Store correct position
+        this.correctChoicePosition = this.choiceOptions.correctPosition;
+    }
+
+    /**
+     * Generate choice options with wrong answers
+     * @param {Object} spell - The current spell object
+     * @returns {Object} Choice options with correct and wrong answers
+     */
+    generateChoiceOptions(spell) {
+        const correct = spell.answer;
+        const wrongAnswers = [];
+        
+        // Generate wrong answers based on different strategies
+        const strategies = [
+            () => correct + 2,  // Off by 2
+            () => correct - 2,  // Off by 2 (other direction)
+            () => correct + 1,  // Off by 1
+            () => correct - 1,  // Off by 1 (other direction)
+            () => this.generateWrongOperation(spell), // Wrong operation
+            () => this.generateOperandError(spell),   // Wrong operand
+        ];
+        
+        // Generate 2 wrong answers using different strategies
+        const usedValues = new Set([correct]);
+        while (wrongAnswers.length < 2 && strategies.length > 0) {
+            const strategyIndex = Math.floor(Math.random() * strategies.length);
+            const strategy = strategies[strategyIndex];
+            const wrongAnswer = strategy();
+            
+            // Ensure positive and not already used
+            if (wrongAnswer > 0 && !usedValues.has(wrongAnswer)) {
+                wrongAnswers.push(wrongAnswer);
+                usedValues.add(wrongAnswer);
+            }
+            
+            // Remove used strategy to avoid duplicates
+            strategies.splice(strategyIndex, 1);
+        }
+        
+        // If we need more wrong answers, generate simple variations
+        while (wrongAnswers.length < 2) {
+            const variation = correct + Math.floor(Math.random() * 10) - 5;
+            if (variation > 0 && !usedValues.has(variation)) {
+                wrongAnswers.push(variation);
+                usedValues.add(variation);
+            }
+        }
+        
+        // Randomly assign positions
+        const positions = ['high', 'middle', 'low'];
+        const correctPos = positions[Math.floor(Math.random() * positions.length)];
+        
+        const result = {
+            correctPosition: correctPos
+        };
+        
+        // Assign values to positions
+        positions.forEach((pos, index) => {
+            if (pos === correctPos) {
+                result[pos] = { value: correct, isCorrect: true };
+            } else {
+                result[pos] = { value: wrongAnswers[index < wrongAnswers.length ? index : 0], isCorrect: false };
+            }
+        });
+        
+        return result;
+    }
+
+    /**
+     * Generate wrong answer using wrong operation
+     * @param {Object} spell - The current spell object
+     * @returns {number} Wrong answer from different operation
+     */
+    generateWrongOperation(spell) {
+        const [a, b] = spell.operands;
+        
+        switch (spell.operation) {
+            case 'addition':
+                return a - b > 0 ? a - b : a + b + 1;
+            case 'subtraction':
+                return a + b;
+            case 'multiplication':
+                return a + b;
+            case 'division':
+                return a * b;
+            default:
+                return spell.answer + 1;
+        }
+    }
+
+    /**
+     * Generate wrong answer with operand error
+     * @param {Object} spell - The current spell object
+     * @returns {number} Wrong answer from modified operand
+     */
+    generateOperandError(spell) {
+        const [a, b] = spell.operands;
+        
+        // Randomly modify one operand by ±1
+        const modifyFirst = Math.random() < 0.5;
+        const modifier = Math.random() < 0.5 ? 1 : -1;
+        
+        let newA = modifyFirst ? Math.max(1, a + modifier) : a;
+        let newB = modifyFirst ? b : Math.max(1, b + modifier);
+        
+        switch (spell.operation) {
+            case 'addition':
+                return newA + newB;
+            case 'subtraction':
+                return Math.max(0, newA - newB);
+            case 'multiplication':
+                return newA * newB;
+            case 'division':
+                return newA / newB;
+            default:
+                return spell.answer + modifier;
+        }
+    }
+
+    /**
+     * Move fox up or down in choice selection
+     * @param {string} direction - 'up' or 'down'
+     */
+    moveFox(direction) {
+        const positions = ['high', 'middle', 'low'];
+        const currentIndex = positions.indexOf(this.foxPosition);
+        
+        if (direction === 'up' && currentIndex > 0) {
+            this.foxPosition = positions[currentIndex - 1];
+        } else if (direction === 'down' && currentIndex < positions.length - 1) {
+            this.foxPosition = positions[currentIndex + 1];
+        }
+        
+        this.updateFoxPosition();
+    }
+
+    /**
+     * Update fox position visual indicator
+     */
+    updateFoxPosition() {
+        // Remove fox from all positions
+        this.elements.choiceHigh.classList.remove('fox-position');
+        this.elements.choiceMiddle.classList.remove('fox-position');
+        this.elements.choiceLow.classList.remove('fox-position');
+        
+        // Add fox to current position
+        const foxElement = this.elements[`choice${this.foxPosition.charAt(0).toUpperCase() + this.foxPosition.slice(1)}`];
+        foxElement.classList.add('fox-position');
+        
+        // Update fox emoji
+        foxElement.querySelector('.choice-label').textContent = '🦊';
+        
+        // Reset other position labels
+        if (this.foxPosition !== 'high') {
+            this.elements.choiceHigh.querySelector('.choice-label').textContent = '↑';
+        }
+        if (this.foxPosition !== 'middle') {
+            this.elements.choiceMiddle.querySelector('.choice-label').textContent = '→';
+        }
+        if (this.foxPosition !== 'low') {
+            this.elements.choiceLow.querySelector('.choice-label').textContent = '↓';
+        }
+    }
+
+    /**
+     * Select the current choice (where fox is positioned)
+     */
+    selectCurrentChoice() {
+        if (!this.isActive || this.currentSpellType !== 'choice') return;
+        
+        const isCorrect = this.foxPosition === this.correctChoicePosition;
+        
+        if (isCorrect) {
+            this.choiceSpellDeflected();
+        } else {
+            this.choiceSpellFailed();
+        }
+    }
+
+    /**
+     * Handle successful choice spell deflection
+     */
+    choiceSpellDeflected() {
+        // Visual feedback
+        const correctElement = this.elements[`choice${this.correctChoicePosition.charAt(0).toUpperCase() + this.correctChoicePosition.slice(1)}`];
+        correctElement.classList.add('correct');
+        
+        // Same as regular spell deflection
+        this.removeCurrentSpellProjectile();
+        this.showFeedback(true);
+        this.animateFoxCelebrate();
+        
+        this.spellsRemaining--;
+        this.updateUI();
+        
+        if (this.animations.isAnimationEnabled()) {
+            this.animations.createSparkles(this.elements.foxCharacter, 12);
+        }
+        
+        setTimeout(() => {
+            correctElement.classList.remove('correct');
+            if (this.spellsRemaining > 0) {
+                this.castFirstSpell();
+            } else {
+                this.victory();
+            }
+        }, 1500);
+    }
+
+    /**
+     * Handle failed choice spell
+     */
+    choiceSpellFailed() {
+        // Visual feedback - show wrong choice
+        const wrongElement = this.elements[`choice${this.foxPosition.charAt(0).toUpperCase() + this.foxPosition.slice(1)}`];
+        const correctElement = this.elements[`choice${this.correctChoicePosition.charAt(0).toUpperCase() + this.correctChoicePosition.slice(1)}`];
+        
+        wrongElement.classList.add('incorrect');
+        correctElement.classList.add('correct');
+        
+        // Show feedback with correct answer
+        const correctAnswer = this.choiceOptions[this.correctChoicePosition].value;
+        this.showFeedback(false, correctAnswer);
+        
+        // Same as regular spell hit
+        this.removeCurrentSpellProjectile();
+        this.foxHealth = Math.max(0, this.foxHealth - 25);
+        this.updateUI();
+        this.animateFoxHurt();
+        
+        setTimeout(() => {
+            wrongElement.classList.remove('incorrect');
+            correctElement.classList.remove('correct');
+            
+            if (this.foxHealth <= 0) {
+                this.defeat();
+            } else if (this.isActive && this.spellsRemaining > 0) {
+                this.castFirstSpell();
+            }
+        }, 1500);
     }
 
     /**

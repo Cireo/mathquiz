@@ -25,7 +25,11 @@ class MathEngine {
             }
         };
 
-        this.operations = ['addition', 'subtraction', 'multiplication', 'division'];
+        this.operations = {
+            beginner: ['addition', 'subtraction', 'multiplication', 'addition', 'subtraction'], // Less division for beginners
+            intermediate: ['addition', 'subtraction', 'multiplication', 'division'],
+            advanced: ['addition', 'subtraction', 'multiplication', 'division', 'division'] // More division for advanced
+        };
         this.currentDifficulty = 'beginner';
     }
 
@@ -58,7 +62,8 @@ class MathEngine {
      */
     generateProblem(operation = null) {
         const config = this.difficulties[this.currentDifficulty];
-        const selectedOperation = operation || this.operations[this.getRandomNumber(0, this.operations.length - 1)];
+        const availableOperations = this.operations[this.currentDifficulty];
+        const selectedOperation = operation || availableOperations[this.getRandomNumber(0, availableOperations.length - 1)];
 
         switch (selectedOperation) {
             case 'addition':
@@ -195,6 +200,14 @@ class MathEngine {
      */
     getAvailableDifficulties() {
         return Object.keys(this.difficulties);
+    }
+
+    /**
+     * Get available operations for current difficulty
+     * @returns {Array} Array of operation names for current difficulty
+     */
+    getAvailableOperations() {
+        return this.operations[this.currentDifficulty] || this.operations.beginner;
     }
 
     /**
