@@ -839,9 +839,10 @@ class Minigame {
         this.elements.foxCharacter.style.animation = '';
         
         // Force update of position classes to trigger correct animation
+        // But don't change the fox position, just refresh the visual state
         this.updateFoxPosition();
         
-        console.log(`🎭 Reset fox animation for position: ${this.foxPosition}`);
+        console.log(`🎭 Reset fox animation for position: ${this.foxPosition} (position unchanged)`);
     }
 
     /**

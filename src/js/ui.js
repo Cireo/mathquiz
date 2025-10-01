@@ -150,6 +150,11 @@ class UIController {
     handleSubmit() {
         const answer = this.elements.answerInput.value.trim();
         
+        // Don't show error if there's no current problem (e.g., during transitions)
+        if (!this.game || !this.game.currentProblem) {
+            return;
+        }
+        
         if (answer === '' || isNaN(Number(answer))) {
             this.showInputError();
             return;
@@ -255,12 +260,12 @@ class UIController {
         secretMessage.className = 'secret-activation-message';
         secretMessage.innerHTML = '🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 Player vs Math Witch! 🧙‍♀️';
         
-        // Style it
+        // Style it with initial opacity 0 to prevent flash
         secretMessage.style.cssText = `
             position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%) scale(0);
             background: linear-gradient(135deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);
             color: white;
             padding: 30px;
@@ -270,13 +275,21 @@ class UIController {
             text-align: center;
             z-index: 10001;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
             pointer-events: none;
+            opacity: 0;
         `;
         
         // Append to body to ensure it's always visible and centered
         document.body.appendChild(secretMessage);
+        
+        // Force reflow and then animate in
+        secretMessage.offsetHeight; // Force reflow
+        
+        // Animate in smoothly
+        secretMessage.style.transition = 'all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        secretMessage.style.transform = 'translate(-50%, -50%) scale(1)';
+        secretMessage.style.opacity = '1';
         
         // Create fire particles around the message
         if (this.game && this.game.animations) {
