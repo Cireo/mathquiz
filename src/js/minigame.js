@@ -23,6 +23,7 @@ class Minigame {
         this.foxPosition = 'middle'; // 'high', 'middle', 'low'
         this.choiceOptions = [];
         this.correctChoicePosition = 'middle';
+        this.hasSpedUp = false; // Track if flying answers have been sped up
         
         // DOM elements
         this.initializeElements();
@@ -109,10 +110,43 @@ class Minigame {
                 case ' ':
                     e.preventDefault();
                     e.stopPropagation();
-                    this.selectCurrentChoice();
+                    this.speedUpFlyingAnswers();
                     break;
             }
         });
+    }
+
+    /**
+     * Speed up flying answers when Enter/Space is pressed
+     */
+    speedUpFlyingAnswers() {
+        // Prevent multiple speed-ups
+        if (this.hasSpedUp) {
+            return;
+        }
+        
+        // Only work if there are flying answers
+        const flyingAnswers = document.querySelectorAll('.flying-answer');
+        if (flyingAnswers.length === 0) {
+            return;
+        }
+        
+        console.log('⚡ Speeding up flying answers!');
+        
+        // Set much faster animation speed (reduce to 25% of original time)
+        const fastSpeed = Math.max(500, this.spellSpeed * 0.25);
+        document.documentElement.style.setProperty('--spell-speed', `${fastSpeed}ms`);
+        
+        // Update all flying answers to use the new speed
+        flyingAnswers.forEach(answer => {
+            // Force restart animation with new speed
+            answer.style.animation = 'none';
+            answer.offsetHeight; // Force reflow
+            answer.style.animation = `flyHorizontal ${fastSpeed}ms linear forwards`;
+        });
+        
+        // Mark as sped up to prevent multiple calls
+        this.hasSpedUp = true;
     }
 
     /**
@@ -277,6 +311,9 @@ class Minigame {
             this.removeSpellProjectile(projectile);
         });
         this.spellProjectiles = [];
+        
+        // Reset speed-up flag for new spell
+        this.hasSpedUp = false;
         
         // Show choice mode, hide input mode
         this.elements.inputSpellMode.classList.add('hidden');
