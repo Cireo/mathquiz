@@ -152,14 +152,27 @@ class Minigame {
         
         console.log(`Remaining time: ${remainingTime}ms → ${newRemainingTime}ms`);
         
-        // Update CSS variable for any new elements
-        document.documentElement.style.setProperty('--spell-speed', `${newRemainingTime}ms`);
-        
-        // Update all flying answers to use the new remaining duration
+        // For each flying answer, get current position and animate from there
         flyingAnswers.forEach(answer => {
-            // Instead of restarting, just change the animation-duration
-            // This preserves the current position and speeds up from there
-            answer.style.animationDuration = `${newRemainingTime}ms`;
+            // Get current computed position
+            const currentStyle = window.getComputedStyle(answer);
+            const currentRight = parseFloat(currentStyle.right);
+            
+            console.log(`Current position: ${currentRight}px`);
+            
+            // Stop the CSS animation and set current position
+            answer.style.animation = 'none';
+            answer.style.right = `${currentRight}px`;
+            
+            // Force reflow
+            answer.offsetHeight;
+            
+            // Calculate target position (same as CSS animation end)
+            const targetRight = window.innerWidth - 140; // Same as calc(100% - 140px)
+            
+            // Use CSS transition for smooth movement from current position
+            answer.style.transition = `right ${newRemainingTime}ms linear`;
+            answer.style.right = `${targetRight}px`;
         });
         
         // Update collision timing to match new speed
@@ -559,6 +572,10 @@ class Minigame {
         const flyingAnswers = this.elements.battleField.querySelectorAll('.flying-answer');
         flyingAnswers.forEach(answer => {
             if (answer.parentNode) {
+                // Clean up any custom styles before removing
+                answer.style.animation = '';
+                answer.style.transition = '';
+                answer.style.right = '';
                 answer.parentNode.removeChild(answer);
             }
         });
