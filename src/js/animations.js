@@ -102,6 +102,7 @@ class Animations {
         
         particle.className = `confetti-particle ${shape}`;
         particle.style.left = Math.random() * window.innerWidth + 'px';
+        particle.style.top = '-20px'; // Start above the screen
         particle.style.animationDelay = Math.random() * 2 + 's';
         particle.style.animationDuration = (Math.random() * 2 + 2) + 's';
         

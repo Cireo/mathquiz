@@ -464,15 +464,42 @@ body {
 
 /* Fox vertical positioning for choice spells */
 .character.fox.position-high {
-    transform: translateY(-80px);
+    animation: characterIdleHigh 2s ease-in-out infinite;
 }
 
 .character.fox.position-middle {
-    transform: translateY(0px);
+    animation: characterIdleMiddle 2s ease-in-out infinite;
 }
 
 .character.fox.position-low {
-    transform: translateY(80px);
+    animation: characterIdleLow 2s ease-in-out infinite;
+}
+
+@keyframes characterIdleHigh {
+    0%, 100% {
+        transform: translateY(-80px);
+    }
+    50% {
+        transform: translateY(-85px);
+    }
+}
+
+@keyframes characterIdleMiddle {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes characterIdleLow {
+    0%, 100% {
+        transform: translateY(80px);
+    }
+    50% {
+        transform: translateY(75px);
+    }
 }
 
 .character.witch {
