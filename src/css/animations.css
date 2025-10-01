@@ -41,6 +41,21 @@
     }
 }
 
+@keyframes gentlePulse {
+    0% {
+        opacity: 0.15;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.25;
+        transform: scale(1.02);
+    }
+    100% {
+        opacity: 0.15;
+        transform: scale(1);
+    }
+}
+
 @keyframes sparkle {
     0%, 100% {
         opacity: 0;
@@ -220,10 +235,14 @@
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3);
+    background: linear-gradient(45deg, 
+        rgba(255, 107, 107, 0.15), 
+        rgba(254, 202, 87, 0.15), 
+        rgba(72, 219, 251, 0.15), 
+        rgba(255, 159, 243, 0.15));
     z-index: -1;
-    border-radius: inherit;
-    animation: pulse 1s ease-in-out infinite;
+    border-radius: 8px; /* Softer rounded corners */
+    animation: gentlePulse 2s ease-in-out infinite; /* Slower, gentler animation */
 }
 
 /* Problem transition effects */
