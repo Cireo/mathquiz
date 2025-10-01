@@ -46,12 +46,9 @@ class Minigame {
             submitButton: document.getElementById('minigame-submit'),
             currentSpellDisplay: document.getElementById('current-spell'),
             
-            // Choice spell elements
+            // Choice spell elements  
             choiceSpellMode: document.getElementById('choice-spell-mode'),
             choiceEquation: document.getElementById('choice-equation'),
-            choiceHigh: document.getElementById('choice-high'),
-            choiceMiddle: document.getElementById('choice-middle'),
-            choiceLow: document.getElementById('choice-low'),
             
             feedback: document.getElementById('minigame-feedback')
         };
@@ -142,15 +139,15 @@ class Minigame {
     adjustDifficulty() {
         switch (this.difficulty) {
             case 'beginner':
-                this.spellSpeed = 5000; // Slower spells
+                this.spellSpeed = 7000; // Much slower for beginners
                 this.spellsRemaining = 3;
                 break;
             case 'intermediate':
-                this.spellSpeed = 4000; // Normal speed
+                this.spellSpeed = 6000; // Slower, more manageable
                 this.spellsRemaining = 4;
                 break;
             case 'advanced':
-                this.spellSpeed = 3000; // Faster spells
+                this.spellSpeed = 5000; // Still challenging but fair
                 this.spellsRemaining = 5;
                 break;
         }
@@ -229,20 +226,162 @@ class Minigame {
         // Update equation display
         this.elements.choiceEquation.textContent = this.currentSpell.question;
         
-        // Generate wrong answers
+        // Generate wrong answers and positions
         this.choiceOptions = this.generateChoiceOptions(this.currentSpell);
         
         // Reset fox position to middle
         this.foxPosition = 'middle';
         this.updateFoxPosition();
         
-        // Update choice displays
-        this.elements.choiceHigh.querySelector('.choice-value').textContent = this.choiceOptions.high.value;
-        this.elements.choiceMiddle.querySelector('.choice-value').textContent = this.choiceOptions.middle.value;
-        this.elements.choiceLow.querySelector('.choice-value').textContent = this.choiceOptions.low.value;
+        // Create flying answers that will move horizontally
+        this.createFlyingAnswers();
+    }
+
+    /**
+     * Create flying answer projectiles that move horizontally
+     */
+    createFlyingAnswers() {
+        const positions = ['high', 'middle', 'low'];
+        const spellSpeedMs = this.spellSpeed;
         
-        // Store correct position
-        this.correctChoicePosition = this.choiceOptions.correctPosition;
+        // Set CSS variable for animation duration
+        document.documentElement.style.setProperty('--spell-speed', `${spellSpeedMs}ms`);
+        
+        positions.forEach(position => {
+            const answer = this.choiceOptions[position];
+            const flyingAnswer = document.createElement('div');
+            
+            flyingAnswer.className = `flying-answer ${position}`;
+            flyingAnswer.textContent = answer.value;
+            flyingAnswer.dataset.position = position;
+            flyingAnswer.dataset.isCorrect = answer.isCorrect;
+            
+            this.elements.battleField.appendChild(flyingAnswer);
+            
+            // Check for collision when answer reaches fox position
+            setTimeout(() => {
+                this.checkAnswerCollision(flyingAnswer);
+            }, spellSpeedMs - 500); // Check collision slightly before end
+        });
+        
+        // Auto-end spell if nothing is caught
+        setTimeout(() => {
+            if (this.isActive && this.currentSpellType === 'choice') {
+                this.handleMissedAnswers();
+            }
+        }, spellSpeedMs + 500);
+    }
+
+    /**
+     * Check if fox catches a flying answer
+     * @param {HTMLElement} flyingAnswer - The flying answer element
+     */
+    checkAnswerCollision(flyingAnswer) {
+        if (!this.isActive || this.currentSpellType !== 'choice') return;
+        
+        const answerPosition = flyingAnswer.dataset.position;
+        const isCorrect = flyingAnswer.dataset.isCorrect === 'true';
+        
+        // Check if fox is in the same position as the answer
+        if (this.foxPosition === answerPosition) {
+            // Fox caught this answer!
+            if (isCorrect) {
+                this.handleCorrectCatch(flyingAnswer);
+            } else {
+                this.handleIncorrectCatch(flyingAnswer);
+            }
+        }
+    }
+
+    /**
+     * Handle fox catching the correct answer
+     * @param {HTMLElement} answerElement - The caught answer element
+     */
+    handleCorrectCatch(answerElement) {
+        // Visual feedback
+        answerElement.classList.add('correct-caught');
+        
+        // Same as successful spell deflection
+        this.clearFlyingAnswers();
+        this.showFeedback(true);
+        this.animateFoxCelebrate();
+        
+        this.spellsRemaining--;
+        this.updateUI();
+        
+        if (this.animations.isAnimationEnabled()) {
+            this.animations.createSparkles(this.elements.foxCharacter, 12);
+        }
+        
+        setTimeout(() => {
+            if (this.spellsRemaining > 0) {
+                this.castFirstSpell();
+            } else {
+                this.victory();
+            }
+        }, 1500);
+    }
+
+    /**
+     * Handle fox catching the wrong answer
+     * @param {HTMLElement} answerElement - The caught wrong answer element
+     */
+    handleIncorrectCatch(answerElement) {
+        // Visual feedback
+        answerElement.classList.add('incorrect-caught');
+        
+        // Show feedback with correct answer
+        const correctAnswer = Object.values(this.choiceOptions).find(opt => opt.isCorrect).value;
+        this.showFeedback(false, correctAnswer);
+        
+        // Same as spell hit
+        this.clearFlyingAnswers();
+        this.foxHealth = Math.max(0, this.foxHealth - 25);
+        this.updateUI();
+        this.animateFoxHurt();
+        
+        setTimeout(() => {
+            if (this.foxHealth <= 0) {
+                this.defeat();
+            } else if (this.isActive && this.spellsRemaining > 0) {
+                this.castFirstSpell();
+            }
+        }, 1500);
+    }
+
+    /**
+     * Handle case where fox misses all answers
+     */
+    handleMissedAnswers() {
+        // Find the correct answer for feedback
+        const correctAnswer = Object.values(this.choiceOptions).find(opt => opt.isCorrect).value;
+        this.showFeedback(false, correctAnswer);
+        
+        // Same as spell hit
+        this.clearFlyingAnswers();
+        this.foxHealth = Math.max(0, this.foxHealth - 25);
+        this.updateUI();
+        this.animateFoxHurt();
+        
+        setTimeout(() => {
+            if (this.foxHealth <= 0) {
+                this.defeat();
+            } else if (this.isActive && this.spellsRemaining > 0) {
+                this.castFirstSpell();
+            }
+        }, 1500);
+    }
+
+    /**
+     * Clear all flying answers from the screen
+     */
+    clearFlyingAnswers() {
+        const flyingAnswers = this.elements.battleField.querySelectorAll('.flying-answer');
+        flyingAnswers.forEach(answer => {
+            if (answer.parentNode) {
+                answer.parentNode.removeChild(answer);
+            }
+        });
     }
 
     /**
@@ -382,112 +521,33 @@ class Minigame {
      * Update fox position visual indicator
      */
     updateFoxPosition() {
-        // Remove fox from all positions
-        this.elements.choiceHigh.classList.remove('fox-position');
-        this.elements.choiceMiddle.classList.remove('fox-position');
-        this.elements.choiceLow.classList.remove('fox-position');
+        // Remove all position classes
+        this.elements.foxCharacter.classList.remove('position-high', 'position-middle', 'position-low');
         
-        // Add fox to current position
-        const foxElement = this.elements[`choice${this.foxPosition.charAt(0).toUpperCase() + this.foxPosition.slice(1)}`];
-        foxElement.classList.add('fox-position');
-        
-        // Update fox emoji
-        foxElement.querySelector('.choice-label').textContent = '🦊';
-        
-        // Reset other position labels
-        if (this.foxPosition !== 'high') {
-            this.elements.choiceHigh.querySelector('.choice-label').textContent = '↑';
-        }
-        if (this.foxPosition !== 'middle') {
-            this.elements.choiceMiddle.querySelector('.choice-label').textContent = '→';
-        }
-        if (this.foxPosition !== 'low') {
-            this.elements.choiceLow.querySelector('.choice-label').textContent = '↓';
-        }
+        // Add current position class
+        this.elements.foxCharacter.classList.add(`position-${this.foxPosition}`);
     }
 
     /**
      * Select the current choice (where fox is positioned)
+     * Note: This is now handled by collision detection in the new system
      */
     selectCurrentChoice() {
-        if (!this.isActive || this.currentSpellType !== 'choice') return;
-        
-        const isCorrect = this.foxPosition === this.correctChoicePosition;
-        
-        if (isCorrect) {
-            this.choiceSpellDeflected();
-        } else {
-            this.choiceSpellFailed();
+        // For choice spells, selection is handled by collision detection
+        // This method is kept for compatibility but does nothing
+        if (this.currentSpellType === 'choice') {
+            console.log('Choice selection handled by collision detection');
+            return;
         }
     }
 
     /**
-     * Handle successful choice spell deflection
-     */
-    choiceSpellDeflected() {
-        // Visual feedback
-        const correctElement = this.elements[`choice${this.correctChoicePosition.charAt(0).toUpperCase() + this.correctChoicePosition.slice(1)}`];
-        correctElement.classList.add('correct');
-        
-        // Same as regular spell deflection
-        this.removeCurrentSpellProjectile();
-        this.showFeedback(true);
-        this.animateFoxCelebrate();
-        
-        this.spellsRemaining--;
-        this.updateUI();
-        
-        if (this.animations.isAnimationEnabled()) {
-            this.animations.createSparkles(this.elements.foxCharacter, 12);
-        }
-        
-        setTimeout(() => {
-            correctElement.classList.remove('correct');
-            if (this.spellsRemaining > 0) {
-                this.castFirstSpell();
-            } else {
-                this.victory();
-            }
-        }, 1500);
-    }
-
-    /**
-     * Handle failed choice spell
-     */
-    choiceSpellFailed() {
-        // Visual feedback - show wrong choice
-        const wrongElement = this.elements[`choice${this.foxPosition.charAt(0).toUpperCase() + this.foxPosition.slice(1)}`];
-        const correctElement = this.elements[`choice${this.correctChoicePosition.charAt(0).toUpperCase() + this.correctChoicePosition.slice(1)}`];
-        
-        wrongElement.classList.add('incorrect');
-        correctElement.classList.add('correct');
-        
-        // Show feedback with correct answer
-        const correctAnswer = this.choiceOptions[this.correctChoicePosition].value;
-        this.showFeedback(false, correctAnswer);
-        
-        // Same as regular spell hit
-        this.removeCurrentSpellProjectile();
-        this.foxHealth = Math.max(0, this.foxHealth - 25);
-        this.updateUI();
-        this.animateFoxHurt();
-        
-        setTimeout(() => {
-            wrongElement.classList.remove('incorrect');
-            correctElement.classList.remove('correct');
-            
-            if (this.foxHealth <= 0) {
-                this.defeat();
-            } else if (this.isActive && this.spellsRemaining > 0) {
-                this.castFirstSpell();
-            }
-        }, 1500);
-    }
-
-    /**
-     * Create a visual spell projectile
+     * Create a visual spell projectile (for input spells only)
      */
     createSpellProjectile() {
+        // Only create traditional projectiles for input spells
+        if (this.currentSpellType !== 'input') return;
+        
         const projectile = document.createElement('div');
         projectile.className = 'spell-projectile';
         projectile.textContent = this.currentSpell.question;
@@ -703,10 +763,11 @@ class Minigame {
     victory() {
         this.isActive = false;
         
-        // Clear any remaining projectiles
+        // Clear any remaining projectiles and flying answers
         this.spellProjectiles.forEach(projectile => {
             this.removeSpellProjectile(projectile);
         });
+        this.clearFlyingAnswers();
         
         // Show victory feedback
         this.elements.feedback.textContent = '🎉 Victory! The Math Witch is defeated! 🎉';
@@ -736,10 +797,11 @@ class Minigame {
     defeat() {
         this.isActive = false;
         
-        // Clear any remaining projectiles
+        // Clear any remaining projectiles and flying answers
         this.spellProjectiles.forEach(projectile => {
             this.removeSpellProjectile(projectile);
         });
+        this.clearFlyingAnswers();
         
         // Show defeat feedback
         this.elements.feedback.textContent = '💔 The Math Witch won this time... Try again! 💔';
@@ -760,6 +822,9 @@ class Minigame {
      * Return to main game after minigame ends
      */
     returnToMainGame() {
+        // Hide minigame screen first
+        this.elements.screen.classList.remove('active');
+        
         // Update main game UI
         this.game.updateUI();
         

@@ -103,9 +103,12 @@ class UIController {
             this.handleKeyboardShortcuts(e);
         });
 
-        // Prevent form submission on enter (except for answer input and buttons)
+        // Prevent form submission on enter (except for answer inputs and buttons)
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.tagName !== 'BUTTON' && e.target.id !== 'answer-input') {
+            if (e.key === 'Enter' && 
+                e.target.tagName !== 'BUTTON' && 
+                e.target.id !== 'answer-input' && 
+                e.target.id !== 'minigame-answer') {
                 e.preventDefault();
             }
         });
