@@ -324,14 +324,19 @@ class Minigame {
         const answerPosition = flyingAnswer.dataset.position;
         const isCorrect = flyingAnswer.dataset.isCorrect === 'true';
         
+        console.log(`🎯 Collision check: Fox at ${this.foxPosition}, Answer at ${answerPosition}, Correct: ${isCorrect}`);
+        
         // Check if fox is in the same position as the answer
         if (this.foxPosition === answerPosition) {
+            console.log('✅ COLLISION! Fox caught the answer!');
             // Fox caught this answer!
             if (isCorrect) {
                 this.handleCorrectCatch(flyingAnswer);
             } else {
                 this.handleIncorrectCatch(flyingAnswer);
             }
+        } else {
+            console.log('❌ No collision - positions don\'t match');
         }
     }
 
@@ -568,6 +573,11 @@ class Minigame {
         
         // Add current position class
         this.elements.foxCharacter.classList.add(`position-${this.foxPosition}`);
+        
+        // Debug logging
+        console.log(`🦊 Fox position updated to: ${this.foxPosition}`);
+        console.log('🎯 Fox element classes:', this.elements.foxCharacter.className);
+        console.log('🎯 Fox element computed style:', window.getComputedStyle(this.elements.foxCharacter).transform);
     }
 
     /**

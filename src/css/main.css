@@ -452,6 +452,10 @@ body {
     flex-direction: column;
     align-items: center;
     z-index: 10;
+}
+
+/* Default idle animation for characters without position classes */
+.character:not(.position-high):not(.position-middle):not(.position-low) {
     animation: characterIdle 2s ease-in-out infinite;
 }
 
