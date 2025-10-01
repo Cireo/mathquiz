@@ -305,6 +305,11 @@ class UIController {
      * @param {KeyboardEvent} e - Keyboard event
      */
     handleKeyboardShortcuts(e) {
+        // Don't handle shortcuts if minigame is active
+        if (this.game && this.game.minigame && this.game.minigame.isMinigameActive()) {
+            return;
+        }
+        
         // Space to submit (if input has value)
         if (e.code === 'Space' && this.elements.answerInput.value && 
             document.activeElement !== this.elements.answerInput) {

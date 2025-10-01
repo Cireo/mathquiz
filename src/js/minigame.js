@@ -86,22 +86,30 @@ class Minigame {
 
         // Handle arrow keys for choice spells
         document.addEventListener('keydown', (e) => {
-            if (this.isActive && this.currentSpellType === 'choice') {
-                switch (e.key) {
-                    case 'ArrowUp':
-                        e.preventDefault();
-                        this.moveFox('up');
-                        break;
-                    case 'ArrowDown':
-                        e.preventDefault();
-                        this.moveFox('down');
-                        break;
-                    case 'Enter':
-                    case ' ':
-                        e.preventDefault();
-                        this.selectCurrentChoice();
-                        break;
-                }
+            // Only handle if minigame is active and it's a choice spell
+            if (!this.isActive || this.currentSpellType !== 'choice') {
+                return;
+            }
+            
+            switch (e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.moveFox('up');
+                    console.log('🦊 Fox moved up to:', this.foxPosition);
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.moveFox('down');
+                    console.log('🦊 Fox moved down to:', this.foxPosition);
+                    break;
+                case 'Enter':
+                case ' ':
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.selectCurrentChoice();
+                    break;
             }
         });
     }
@@ -180,8 +188,12 @@ class Minigame {
             return;
         }
 
+        // Clear any existing spells first
+        this.clearAllSpells();
+
         // Randomly choose spell type (70% input, 30% choice)
         this.currentSpellType = Math.random() < 0.7 ? 'input' : 'choice';
+        console.log(`🎯 Casting ${this.currentSpellType} spell`);
 
         // Generate new math problem
         this.mathEngine.setDifficulty(this.difficulty);
@@ -193,17 +205,41 @@ class Minigame {
             this.setupChoiceSpell();
         }
         
-        // Create spell projectile
-        this.createSpellProjectile();
+        // Create spell projectile ONLY for input spells
+        if (this.currentSpellType === 'input') {
+            this.createSpellProjectile();
+        }
         
         // Animate witch casting
         this.animateWitchCast();
     }
 
     /**
+     * Clear all existing spells and projectiles
+     */
+    clearAllSpells() {
+        // Clear projectiles
+        this.spellProjectiles.forEach(projectile => {
+            this.removeSpellProjectile(projectile);
+        });
+        this.spellProjectiles = [];
+        
+        // Clear flying answers
+        this.clearFlyingAnswers();
+        
+        // Reset current spell
+        this.currentSpell = null;
+        
+        console.log('🧹 Cleared all existing spells');
+    }
+
+    /**
      * Set up input-based spell
      */
     setupInputSpell() {
+        // Clear any flying answers from previous choice spells
+        this.clearFlyingAnswers();
+        
         // Show input mode, hide choice mode
         this.elements.inputSpellMode.classList.remove('hidden');
         this.elements.choiceSpellMode.classList.add('hidden');
@@ -219,6 +255,12 @@ class Minigame {
      * Set up choice-based spell with wrong answers
      */
     setupChoiceSpell() {
+        // Clear any projectiles from previous input spells
+        this.spellProjectiles.forEach(projectile => {
+            this.removeSpellProjectile(projectile);
+        });
+        this.spellProjectiles = [];
+        
         // Show choice mode, hide input mode
         this.elements.inputSpellMode.classList.add('hidden');
         this.elements.choiceSpellMode.classList.remove('hidden');
