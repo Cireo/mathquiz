@@ -164,6 +164,10 @@ class Game {
         setTimeout(() => {
             if (this.gameState.isActive) {
                 this.generateNewProblem();
+                // Ensure input is focused after problem generation and any animations
+                setTimeout(() => {
+                    this.ui.focusAnswerInput();
+                }, 100);
             }
         }, 2000);
     }
@@ -196,7 +200,7 @@ class Game {
         // Animate score and streak
         if (this.animations.isAnimationEnabled()) {
             this.animations.animateScoreIncrease(this.ui.elements.scoreElement, this.gameState.score);
-            this.animations.emphasizeStreak(this.gameState.streak);
+            this.animations.animateStreak(this.ui.elements.streakElement, this.gameState.streak);
             
             // Special effects for big streaks
             if (this.gameState.streak >= 5 && this.gameState.streak % 5 === 0) {
@@ -335,6 +339,7 @@ class Game {
 
         // Update progress bar
         const progress = (this.gameState.currentLevelProgress / this.gameState.problemsPerLevel) * 100;
+        console.log(`Progress: ${this.gameState.currentLevelProgress}/${this.gameState.problemsPerLevel} = ${progress}%`);
         this.ui.updateProgressBar(progress);
     }
 

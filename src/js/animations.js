@@ -282,13 +282,17 @@ class Animations {
         if (!problemElement) return;
 
         if (this.isAnimationEnabled()) {
-            // Exit animation
+            // Exit animation - fade out current problem
             this.addAnimation(problemElement, 'problem-exit', 300);
             
+            // Change text content at the end of fade out, then fade in new problem
             setTimeout(() => {
                 problemElement.textContent = newProblem;
-                this.addAnimation(problemElement, 'problem-enter', 500);
-            }, 300);
+                // Small delay to ensure text change is rendered before enter animation
+                setTimeout(() => {
+                    this.addAnimation(problemElement, 'problem-enter', 500);
+                }, 10);
+            }, 280); // Slightly before animation ends to avoid flash
         } else {
             problemElement.textContent = newProblem;
         }
