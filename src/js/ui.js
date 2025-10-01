@@ -242,19 +242,8 @@ class UIController {
             clearTimeout(this.secretClickTimer);
         }
 
-        // Show special activation message
+        // Show special activation message (which will start the battle after the message)
         this.showSecretActivationFeedback();
-        
-        // Trigger minigame after short delay
-        setTimeout(() => {
-            if (this.game && this.game.minigame) {
-                // Use current difficulty or default to intermediate for secret battles
-                const difficulty = this.game.gameState.difficulty || 'intermediate';
-                this.game.minigame.startMinigame(difficulty);
-                
-                console.log('🎉 Secret battle activated! 🦊⚔️🧙‍♀️');
-            }
-        }, 1500);
     }
 
     /**
@@ -300,7 +289,12 @@ class UIController {
                 secretMessage.parentNode.removeChild(secretMessage);
             }
             // Start the battle after message disappears
-            this.game.minigame.startMinigame();
+            if (this.game && this.game.minigame) {
+                // Use current difficulty or default to intermediate for secret battles
+                const difficulty = this.game.gameState.difficulty || 'intermediate';
+                this.game.minigame.startMinigame(difficulty);
+                console.log('🎉 Secret battle activated! 🦊⚔️🧙‍♀️');
+            }
         }, 2000);
     }
 

@@ -120,11 +120,20 @@ class Minigame {
      * @param {string} difficulty - Difficulty level from main game
      */
     startMinigame(difficulty = 'beginner') {
+        // Prevent multiple simultaneous starts
+        if (this.isActive) {
+            console.log('🚫 Minigame already active, ignoring duplicate start');
+            return;
+        }
+        
+        console.log(`🎮 Starting minigame with difficulty: ${difficulty}`);
+        
         this.difficulty = difficulty;
         this.isActive = true;
         this.foxHealth = 100;
         this.spellsRemaining = 5;
         this.spellProjectiles = [];
+        this.isProcessingCollision = false; // Reset collision processing flag
         
         // Adjust difficulty settings
         this.adjustDifficulty();
