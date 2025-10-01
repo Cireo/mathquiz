@@ -90,7 +90,7 @@ class MathEngine {
         
         return {
             operation: 'addition',
-            question: `${a} + ${b}`,
+            question: `${a} + ${b} = ?`,
             answer: a + b,
             operands: [a, b],
             difficulty: this.currentDifficulty
@@ -113,7 +113,7 @@ class MathEngine {
 
         return {
             operation: 'subtraction',
-            question: `${a} - ${b}`,
+            question: `${a} - ${b} = ?`,
             answer: a - b,
             operands: [a, b],
             difficulty: this.currentDifficulty
@@ -131,7 +131,7 @@ class MathEngine {
 
         return {
             operation: 'multiplication',
-            question: `${a} × ${b}`,
+            question: `${a} × ${b} = ?`,
             answer: a * b,
             operands: [a, b],
             difficulty: this.currentDifficulty
@@ -150,7 +150,7 @@ class MathEngine {
 
         return {
             operation: 'division',
-            question: `${dividend} ÷ ${divisor}`,
+            question: `${dividend} ÷ ${divisor} = ?`,
             answer: quotient,
             operands: [dividend, divisor],
             difficulty: this.currentDifficulty

@@ -11,6 +11,9 @@ class UIController {
         this.secretFireClicks = 0;
         this.secretClickTimer = null;
         
+        // Answer processing state
+        this.isProcessingAnswer = false;
+        
         this.bindEvents();
     }
 
@@ -155,6 +158,11 @@ class UIController {
             return;
         }
         
+        // Prevent multiple submissions while processing
+        if (this.isProcessingAnswer) {
+            return;
+        }
+        
         if (answer === '' || isNaN(Number(answer))) {
             this.showInputError();
             return;
@@ -162,14 +170,16 @@ class UIController {
 
         const numericAnswer = Number(answer);
         
+        // Set processing flag to prevent multiple submissions
+        this.isProcessingAnswer = true;
+        
+        // Disable input and button immediately
+        this.elements.answerInput.disabled = true;
+        this.elements.submitButton.disabled = true;
+        
         if (this.game && typeof this.game.submitAnswer === 'function') {
             this.game.submitAnswer(numericAnswer);
         }
-        
-        // Clear input for next problem
-        this.elements.answerInput.value = '';
-        this.elements.submitButton.disabled = true;
-        this.elements.answerInput.style.borderColor = '#e2e8f0';
     }
 
     /**
@@ -426,10 +436,24 @@ class UIController {
     }
 
     /**
+     * Show the correct answer by replacing ? with the actual answer
+     * @param {number} answer - The correct answer
+     */
+    showCorrectAnswer(answer) {
+        if (this.elements.problemElement && this.game.currentProblem) {
+            const questionWithAnswer = this.game.currentProblem.question.replace('?', answer);
+            this.elements.problemElement.textContent = questionWithAnswer;
+        }
+    }
+
+    /**
      * Display new problem
      * @param {string} problemText - Problem to display
      */
     displayProblem(problemText) {
+        // Reset for new question
+        this.prepareForNewQuestion();
+        
         if (this.elements.problemElement) {
             if (this.game && this.game.animations) {
                 this.game.animations.animateProblemTransition(this.elements.problemElement, problemText);
@@ -437,6 +461,33 @@ class UIController {
                 this.elements.problemElement.textContent = problemText;
             }
         }
+    }
+
+    /**
+     * Prepare UI for new question
+     */
+    prepareForNewQuestion() {
+        // Reset processing state
+        this.isProcessingAnswer = false;
+        
+        // Clear and re-enable input
+        if (this.elements.answerInput) {
+            this.elements.answerInput.value = '';
+            this.elements.answerInput.disabled = false;
+            this.elements.answerInput.style.borderColor = '#e2e8f0';
+        }
+        
+        // Re-enable submit button
+        if (this.elements.submitButton) {
+            this.elements.submitButton.disabled = false;
+        }
+        
+        // Focus input for immediate typing
+        setTimeout(() => {
+            if (this.elements.answerInput && !this.elements.answerInput.disabled) {
+                this.elements.answerInput.focus();
+            }
+        }, 100);
     }
 
     /**

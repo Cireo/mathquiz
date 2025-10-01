@@ -200,6 +200,7 @@ class Game {
         this.gameState.currentLevelProgress++;
 
         // Show feedback and effects
+        this.ui.showCorrectAnswer(userAnswer); // Replace ? with actual answer
         this.ui.showFeedback(true);
         this.ui.showFloatingPoints(points);
         
