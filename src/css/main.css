@@ -512,7 +512,7 @@ body {
 
 .character-sprite {
     font-size: 4rem;
-    margin-bottom: 5px; /* Reduced from 10px to bring name closer */
+    margin-bottom: 2px; /* Further reduced from 5px for even tighter spacing */
     filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
 }
 
@@ -666,7 +666,7 @@ body {
 
 .current-spell-display {
     margin-top: 10px;
-    font-size: 1.1rem;
+    font-size: 1.6rem; /* Increased from 1.1rem for better visibility */
     color: #ffd700;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
@@ -682,7 +682,7 @@ body {
 }
 
 .choice-spell-equation {
-    font-size: 2rem;
+    font-size: 2.4rem; /* Increased from 2rem for better visibility */
     color: #ffd700;
     font-weight: bold;
     margin-bottom: 20px;

@@ -326,7 +326,7 @@ class Game {
         }
 
         // Score achievements
-        if (this.gameState.score >= 100) {
+        if (this.gameState.score >= 100 && !this.storage.hasAchievement('score_100')) {
             earned.push(this.achievements.find(a => a.id === 'score_100'));
         }
 

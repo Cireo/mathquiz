@@ -149,6 +149,9 @@ class Minigame {
         // Show minigame screen
         this.showMinigameScreen();
         
+        // Update fox position visually after screen is shown
+        this.updateFoxPosition();
+        
         // Start the battle!
         this.castFirstSpell();
         
