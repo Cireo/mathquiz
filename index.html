@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz Adventure! 🔢✨</title>
+    <link rel="stylesheet" href="src/css/main.css">
+    <link rel="stylesheet" href="src/css/animations.css">
+</head>
+<body>
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen active">
+        <div class="container">
+            <h1 class="title">🌟 Math Quiz Adventure! 🌟</h1>
+            <div class="mascot">🦊</div>
+            <p class="subtitle">Let's practice math together!</p>
+            
+            <div class="difficulty-selection">
+                <h3>Choose your level:</h3>
+                <button class="difficulty-btn" data-level="beginner">
+                    🌱 Beginner
+                    <small>Single digits & easy times tables</small>
+                </button>
+                <button class="difficulty-btn" data-level="intermediate">
+                    🌿 Intermediate  
+                    <small>Two digits & more times tables</small>
+                </button>
+                <button class="difficulty-btn" data-level="advanced">
+                    🌳 Advanced
+                    <small>Mixed operations & division</small>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" class="screen">
+        <div class="container">
+            <!-- Header with stats -->
+            <div class="game-header">
+                <div class="stat-item">
+                    <span class="label">Score:</span>
+                    <span id="score" class="value">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Streak:</span>
+                    <span id="streak" class="value">0</span>
+                    <span class="streak-indicator">🔥</span>
+                </div>
+                <div class="stat-item">
+                    <span class="label">Level:</span>
+                    <span id="level" class="value">1</span>
+                </div>
+            </div>
+
+            <!-- Progress bar -->
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <!-- Problem display -->
+            <div class="problem-container">
+                <div id="problem" class="problem-text">2 + 3 = ?</div>
+            </div>
+
+            <!-- Answer input -->
+            <div class="answer-container">
+                <input type="number" id="answer-input" placeholder="Your answer..." autofocus>
+                <button id="submit-btn" class="submit-button">Check Answer! ✨</button>
+            </div>
+
+            <!-- Feedback area -->
+            <div id="feedback" class="feedback"></div>
+
+            <!-- Achievement display -->
+            <div id="achievement" class="achievement-popup"></div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="results-screen" class="screen">
+        <div class="container">
+            <h2 class="results-title">🎉 Great Job! 🎉</h2>
+            <div class="results-stats">
+                <div class="stat">
+                    <span class="stat-label">Final Score:</span>
+                    <span id="final-score" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Best Streak:</span>
+                    <span id="best-streak" class="stat-value">0</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-label">Problems Solved:</span>
+                    <span id="problems-solved" class="stat-value">0</span>
+                </div>
+            </div>
+            <div class="results-actions">
+                <button id="play-again-btn" class="action-button">Play Again! 🎮</button>
+                <button id="change-level-btn" class="action-button">Change Level 📊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading scripts -->
+    <script src="src/js/math-engine.js"></script>
+    <script src="src/js/storage.js"></script>
+    <script src="src/js/animations.js"></script>
+    <script src="src/js/ui.js"></script>
+    <script src="src/js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Quiz - Test Runner</title>
+    <style>
+        body {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #50fa7b;
+            border-bottom: 2px solid #50fa7b;
+            padding-bottom: 10px;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            background: #282a36;
+            border-radius: 8px;
+            border-left: 4px solid #8be9fd;
+        }
+
+        .test-output {
+            background: #44475a;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            font-family: inherit;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .run-button {
+            background: #50fa7b;
+            color: #282a36;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+
+        .run-button:hover {
+            background: #5af78e;
+        }
+
+        .run-button:active {
+            background: #4adf71;
+        }
+
+        .clear-button {
+            background: #ff5555;
+            color: white;
+        }
+
+        .clear-button:hover {
+            background: #ff6e6e;
+        }
+
+        .stats {
+            background: #6272a4;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+
+        .console-override {
+            color: #f1fa8c;
+        }
+
+        .console-error {
+            color: #ff5555;
+        }
+
+        .console-success {
+            color: #50fa7b;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Math Quiz Game - Test Suite</h1>
+    
+    <div class="stats">
+        <strong>Test Environment:</strong> Browser-based testing for Math Quiz Game components
+    </div>
+
+    <div class="test-section">
+        <h2>🔢 MathEngine Tests</h2>
+        <p>Tests the core math problem generation and validation logic.</p>
+        <button class="run-button" onclick="runMathEngineTestSuite()">Run MathEngine Tests</button>
+        <div id="math-engine-output" class="test-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎮 Game Logic Tests</h2>
+        <p>Tests the game mechanics, scoring, and state management.</p>
+        <button class="run-button" onclick="runGameTestSuite()">Run Game Tests</button>
+        <div id="game-output" class="test-output"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>🏃‍♂️ Run All Tests</h2>
+        <p>Execute the complete test suite.</p>
+        <button class="run-button" onclick="runAllTests()">Run All Tests</button>
+        <button class="clear-button run-button" onclick="clearAllOutputs()">Clear All</button>
+        <div id="all-tests-output" class="test-output"></div>
+    </div>
+
+    <!-- Load game modules -->
+    <script src="../src/js/math-engine.js"></script>
+    <script src="../src/js/storage.js"></script>
+    <script src="../src/js/animations.js"></script>
+    
+    <!-- Load test files -->
+    <script src="math-engine.test.js"></script>
+    <script src="game.test.js"></script>
+
+    <script>
+        // Console override for capturing test output
+        let originalConsole = {
+            log: console.log,
+            error: console.error,
+            warn: console.warn
+        };
+
+        function captureConsole(outputElement) {
+            let output = '';
+            
+            console.log = (...args) => {
+                const message = args.join(' ');
+                output += message + '\n';
+                outputElement.innerHTML = `<span class="console-override">${escapeHtml(output)}</span>`;
+                originalConsole.log(...args);
+            };
+
+            console.error = (...args) => {
+                const message = args.join(' ');
+                output += message + '\n';
+                outputElement.innerHTML = `<span class="console-error">${escapeHtml(output)}</span>`;
+                originalConsole.error(...args);
+            };
+
+            return () => {
+                console.log = originalConsole.log;
+                console.error = originalConsole.error;
+                console.warn = originalConsole.warn;
+                return output;
+            };
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function runMathEngineTestSuite() {
+            const outputElement = document.getElementById('math-engine-output');
+            outputElement.innerHTML = '<span style="color: #ffb86c;">Running MathEngine tests...</span>';
+            
+            const restoreConsole = captureConsole(outputElement);
+            
+            try {
+                const success = runMathEngineTests();
+                setTimeout(() => {
+                    const output = restoreConsole();
+                    outputElement.innerHTML = `<span class="${success ? 'console-success' : 'console-error'}">${escapeHtml(output)}</span>`;
+                }, 100);
+            } catch (error) {
+                restoreConsole();
+                outputElement.innerHTML = `<span class="console-error">Error running tests: ${escapeHtml(error.message)}</span>`;
+            }
+        }
+
+        function runGameTestSuite() {
+            const outputElement = document.getElementById('game-output');
+            outputElement.innerHTML = '<span style="color: #ffb86c;">Running Game Logic tests...</span>';
+            
+            const restoreConsole = captureConsole(outputElement);
+            
+            try {
+                const success = runGameTests();
+                setTimeout(() => {
+                    const output = restoreConsole();
+                    outputElement.innerHTML = `<span class="${success ? 'console-success' : 'console-error'}">${escapeHtml(output)}</span>`;
+                }, 100);
+            } catch (error) {
+                restoreConsole();
+                outputElement.innerHTML = `<span class="console-error">Error running tests: ${escapeHtml(error.message)}</span>`;
+            }
+        }
+
+        function runAllTests() {
+            const outputElement = document.getElementById('all-tests-output');
+            outputElement.innerHTML = '<span style="color: #ffb86c;">Running all tests...</span>';
+            
+            const restoreConsole = captureConsole(outputElement);
+            
+            try {
+                console.log('🚀 Starting complete test suite...\n');
+                
+                const mathEngineSuccess = runMathEngineTests();
+                console.log('\n' + '='.repeat(50) + '\n');
+                
+                const gameSuccess = runGameTests();
+                
+                console.log('\n' + '='.repeat(50));
+                console.log('📊 Overall Test Results:');
+                console.log(`   MathEngine: ${mathEngineSuccess ? 'PASS' : 'FAIL'}`);
+                console.log(`   Game Logic: ${gameSuccess ? 'PASS' : 'FAIL'}`);
+                console.log(`   Overall: ${mathEngineSuccess && gameSuccess ? 'ALL TESTS PASS ✅' : 'SOME TESTS FAILED ❌'}`);
+                
+                setTimeout(() => {
+                    const output = restoreConsole();
+                    const allPassed = mathEngineSuccess && gameSuccess;
+                    outputElement.innerHTML = `<span class="${allPassed ? 'console-success' : 'console-error'}">${escapeHtml(output)}</span>`;
+                }, 100);
+                
+            } catch (error) {
+                restoreConsole();
+                outputElement.innerHTML = `<span class="console-error">Error running tests: ${escapeHtml(error.message)}</span>`;
+            }
+        }
+
+        function clearAllOutputs() {
+            document.getElementById('math-engine-output').innerHTML = '';
+            document.getElementById('game-output').innerHTML = '';
+            document.getElementById('all-tests-output').innerHTML = '';
+        }
+
+        // Auto-run a quick test on page load to verify everything works
+        window.addEventListener('load', () => {
+            console.log('🎯 Test runner loaded successfully!');
+            console.log('Click the buttons above to run tests.');
+        });
+    </script>
+</body>
+</html>
