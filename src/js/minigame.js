@@ -135,6 +135,10 @@ class Minigame {
         this.spellProjectiles = [];
         this.isProcessingCollision = false; // Reset collision processing flag
         
+        // Reset fox to center position for fresh battle
+        this.foxPosition = 'middle';
+        console.log('🦊 Reset fox to middle position for fresh battle');
+        
         // Adjust difficulty settings
         this.adjustDifficulty();
         
@@ -663,8 +667,27 @@ class Minigame {
         if (isCorrect) {
             this.spellDeflected();
         } else {
+            // Clear the input field for next attempt
+            this.elements.answerInput.value = '';
+            
+            // Show wrong answer feedback
             this.showFeedback(false, this.currentSpell.answer);
-            // Don't immediately cast next spell on wrong answer, give them time to try again
+            
+            // Animate fox getting hurt from wrong answer
+            this.animateFoxHurt();
+            
+            // Take some damage for wrong input spell answer
+            this.foxHealth = Math.max(0, this.foxHealth - 10);
+            this.updateUI();
+            
+            console.log(`❌ Wrong answer for input spell. Fox took 10 damage. Health: ${this.foxHealth}`);
+            
+            // Check if fox is defeated
+            if (this.foxHealth <= 0) {
+                setTimeout(() => {
+                    this.defeat();
+                }, 1000);
+            }
         }
     }
 

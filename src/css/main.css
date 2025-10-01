@@ -512,7 +512,7 @@ body {
 
 .character-sprite {
     font-size: 4rem;
-    margin-bottom: 10px;
+    margin-bottom: 5px; /* Reduced from 10px to bring name closer */
     filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.3));
 }
 
