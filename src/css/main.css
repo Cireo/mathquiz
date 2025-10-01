@@ -1122,6 +1122,22 @@ body {
     font-family: 'Courier New', monospace;
 }
 
+/* Special formatting for vertical math problems */
+.vertical-math {
+    font-family: 'Courier New', monospace;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #667eea;
+    line-height: 1.2;
+    white-space: pre;
+    text-align: center;
+    margin: 20px 0;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    border: 2px solid #e9ecef;
+}
+
 .step-visual .explanation {
     font-size: 1.1rem;
     color: #4a5568;

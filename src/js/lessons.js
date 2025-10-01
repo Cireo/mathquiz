@@ -285,12 +285,10 @@ class LessonsManager {
                                 <div class="explanation">
                                     Sometimes ones add up to 10 or more. We need to <span class="highlight">"carry"</span>!
                                 </div>
-                                <div class="math-example">
-                                      27<br>
-                                    + 15<br>
-                                    ----<br>
-                                      42
-                                </div>
+                                <div class="vertical-math">  27
++ 15
+----
+  42</div>
                                 <div class="explanation">
                                     7 + 5 = 12. Write down 2, carry the 1 to tens place: 1 + 2 + 1 = 4
                                 </div>
