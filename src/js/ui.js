@@ -85,9 +85,9 @@ class UIController {
             this.handleKeyboardShortcuts(e);
         });
 
-        // Prevent form submission on enter
+        // Prevent form submission on enter (except for answer input and buttons)
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && e.target.tagName !== 'BUTTON') {
+            if (e.key === 'Enter' && e.target.tagName !== 'BUTTON' && e.target.id !== 'answer-input') {
                 e.preventDefault();
             }
         });
