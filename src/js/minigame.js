@@ -281,8 +281,9 @@ class Minigame {
         // Generate wrong answers and positions
         this.choiceOptions = this.generateChoiceOptions(this.currentSpell);
         
-        // Reset fox position to middle
+        // Reset fox position to middle for each new choice spell
         this.foxPosition = 'middle';
+        console.log('🦊 Resetting fox position to middle for new choice spell');
         this.updateFoxPosition();
         
         // Create flying answers that will move horizontally
@@ -811,7 +812,8 @@ class Minigame {
         if (this.animations.isAnimationEnabled()) {
             this.elements.foxCharacter.style.animation = 'characterCelebrate 0.8s ease-out';
             setTimeout(() => {
-                this.elements.foxCharacter.style.animation = 'characterIdle 2s ease-in-out infinite';
+                // Reset to position-appropriate animation
+                this.resetFoxAnimation();
             }, 800);
         }
     }
@@ -823,9 +825,23 @@ class Minigame {
         if (this.animations.isAnimationEnabled()) {
             this.elements.foxCharacter.style.animation = 'characterHurt 0.6s ease-out';
             setTimeout(() => {
-                this.elements.foxCharacter.style.animation = 'characterIdle 2s ease-in-out infinite';
+                // Reset to position-appropriate animation
+                this.resetFoxAnimation();
             }, 600);
         }
+    }
+
+    /**
+     * Reset fox animation to appropriate idle animation based on position
+     */
+    resetFoxAnimation() {
+        // Remove any inline animation style to let CSS classes take over
+        this.elements.foxCharacter.style.animation = '';
+        
+        // Force update of position classes to trigger correct animation
+        this.updateFoxPosition();
+        
+        console.log(`🎭 Reset fox animation for position: ${this.foxPosition}`);
     }
 
     /**
