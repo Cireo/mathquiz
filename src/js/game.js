@@ -11,6 +11,9 @@ class Game {
         // Initialize minigame
         this.minigame = new Minigame(this);
         
+        // Initialize lessons system
+        this.lessons = new LessonsManager(this);
+        
         // Initialize UI after other components
         this.ui = new UIController(this);
         

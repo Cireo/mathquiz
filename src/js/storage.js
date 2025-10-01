@@ -240,6 +240,16 @@ class Storage {
     }
 
     /**
+     * Check if a specific achievement has been earned
+     * @param {string} achievementId - The ID of the achievement to check
+     * @returns {boolean} True if achievement has been earned
+     */
+    hasAchievement(achievementId) {
+        const data = this.loadGameData();
+        return data.achievements.some(achievement => achievement.id === achievementId);
+    }
+
+    /**
      * Get user settings
      * @returns {Object} Settings object
      */

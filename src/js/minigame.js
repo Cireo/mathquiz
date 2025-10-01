@@ -968,10 +968,17 @@ class Minigame {
             
             // Generate new problem immediately before showing UI
             this.game.generateNewProblem();
+            
+            console.log(`🎮 Returned to main game - Level ${this.game.gameState.level}, Progress: ${this.game.gameState.currentLevelProgress}/${this.game.gameState.problemsPerLevel}`);
         }
         
-        // Update main game UI (now with new problem if leveled up)
+        // Update main game UI (now with correct level progress and new problem if leveled up)
         this.game.updateUI();
+        
+        // Clear any previous answer from the main game input
+        if (this.game.ui.elements.answerInput) {
+            this.game.ui.elements.answerInput.value = '';
+        }
         
         // Show game screen
         this.game.ui.showGameScreen();

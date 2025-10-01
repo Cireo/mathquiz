@@ -30,6 +30,13 @@
                     <small>Mixed operations & division</small>
                 </button>
             </div>
+            
+            <div class="menu-actions">
+                <button id="lessons-btn" class="menu-btn">
+                    📚 Interactive Lessons
+                    <small>Learn new strategies</small>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -60,7 +67,7 @@
 
             <!-- Problem display -->
             <div class="problem-container">
-                <div id="problem" class="problem-text">2 + 3 = ?</div>
+                <div id="problem" class="problem-text">= ?</div>
             </div>
 
             <!-- Answer input -->
@@ -118,7 +125,7 @@
             <div class="minigame-input">
                 <!-- Regular input spell -->
                 <div id="input-spell-mode" class="spell-mode">
-                    <input type="number" id="minigame-answer" placeholder="Quick! Type answer..." autofocus>
+                    <input type="number" id="minigame-answer" placeholder="Answer..." autofocus>
                     <button id="minigame-submit" class="minigame-submit-button">Defend! ⚔️</button>
                     <div id="current-spell" class="current-spell-display">Incoming spell: 7 + 3 = ?</div>
                 </div>
@@ -161,10 +168,70 @@
         </div>
     </div>
 
+    <!-- Lessons Screen -->
+    <div id="lessons-screen" class="screen">
+        <div class="container">
+            <h1 class="title">📚 Interactive Lessons</h1>
+            <div class="mascot">🦊</div>
+            <p class="subtitle">Learn new math strategies step by step!</p>
+            
+            <div class="lessons-grid">
+                <button class="lesson-card" data-lesson="multiplication">
+                    <div class="lesson-icon">✖️</div>
+                    <h3>Multiplication Tricks</h3>
+                    <p>Learn patterns and shortcuts for times tables</p>
+                    <div class="lesson-level">Beginner → Intermediate</div>
+                </button>
+                
+                <button class="lesson-card" data-lesson="division">
+                    <div class="lesson-icon">➗</div>
+                    <h3>Division Strategies</h3>
+                    <p>Master division with visual methods</p>
+                    <div class="lesson-level">Intermediate → Advanced</div>
+                </button>
+                
+                <button class="lesson-card" data-lesson="two-digit">
+                    <div class="lesson-icon">🔢</div>
+                    <h3>Two-Digit Operations</h3>
+                    <p>Addition and subtraction with carrying</p>
+                    <div class="lesson-level">Beginner → Intermediate</div>
+                </button>
+            </div>
+            
+            <button id="back-to-menu-btn" class="action-button">← Back to Menu</button>
+        </div>
+    </div>
+
+    <!-- Lesson Content Screen -->
+    <div id="lesson-content-screen" class="screen">
+        <div class="container">
+            <div class="lesson-header">
+                <button id="back-to-lessons-btn" class="back-btn">← Back to Lessons</button>
+                <h1 id="lesson-title" class="lesson-title"></h1>
+                <div class="lesson-progress">
+                    <span id="lesson-step-indicator">Step 1 of 5</span>
+                </div>
+            </div>
+            
+            <div class="lesson-content">
+                <div id="lesson-step-content" class="lesson-step">
+                    <!-- Dynamic lesson content will be inserted here -->
+                </div>
+                
+                <div class="lesson-navigation">
+                    <button id="prev-step-btn" class="nav-btn" disabled>← Previous</button>
+                    <button id="next-step-btn" class="nav-btn">Next →</button>
+                    <button id="complete-lesson-btn" class="nav-btn complete-btn" style="display: none;">Complete Lesson ✓</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Loading scripts -->
     <script src="src/js/math-engine.js"></script>
     <script src="src/js/storage.js"></script>
     <script src="src/js/animations.js"></script>
+    <script src="src/js/lessons.js"></script>
     <script src="src/js/minigame.js"></script>
     <script src="src/js/ui.js"></script>
     <script src="src/js/game.js"></script>
