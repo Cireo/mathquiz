@@ -3,15 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player's Math Quest! 🦊✨</title>
+    <title>Math Quest! 🦊✨</title>
     <link rel="stylesheet" href="src/css/main.css">
     <link rel="stylesheet" href="src/css/animations.css">
 </head>
 <body>
-    <!-- Welcome Screen -->
-    <div id="welcome-screen" class="screen active">
+    <!-- Name Input Screen -->
+    <div id="name-input-screen" class="screen active">
         <div class="container">
-            <h1 class="title">🌟 Player's Math Quest! 🌟</h1>
+            <div class="welcome-content">
+                <h1 class="title">🌟 Math Quest! 🌟</h1>
+                <div class="mascot">🦊</div>
+                <div class="name-input-section">
+                    <h2>Welcome, young mathematician!</h2>
+                    <p>What's your name?</p>
+                    <div class="name-input-container">
+                        <input type="text" id="player-name-input" class="name-input" placeholder="Enter your name..." maxlength="20" autofocus>
+                        <button id="start-adventure-btn" class="action-button">Start My Adventure! 🚀</button>
+                    </div>
+                    <p class="name-hint">Your name will appear throughout your math adventure!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Welcome Screen -->
+    <div id="welcome-screen" class="screen">
+        <div class="container">
+            <h1 class="title">🌟 <span id="player-name-title">Math Quest</span>! 🌟</h1>
             <div class="mascot">🦊</div>
             <p class="subtitle">Let's practice math together!</p>
             
@@ -88,7 +107,7 @@
     <div id="minigame-screen" class="screen">
         <div class="minigame-container">
             <div class="minigame-header">
-                <h2 class="minigame-title">🦊 Player's Math Battle! 🧙‍♀️</h2>
+                <h2 class="minigame-title">🦊 <span id="player-name-battle">Math Battle</span>! 🧙‍♀️</h2>
                 <div class="minigame-stats">
                     <div class="fox-health">
                         <span class="health-label">Fox Health:</span>
@@ -106,7 +125,7 @@
                 <!-- Fox Character (can move up/down) -->
                 <div id="fox-character" class="character fox">
                     <div class="character-sprite">🦊</div>
-                    <div class="character-name">Player</div>
+                    <div class="character-name" id="player-name-character">Player</div>
                 </div>
 
                 <!-- Battle Field with flying answers -->

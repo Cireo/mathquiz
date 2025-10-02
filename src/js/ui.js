@@ -24,9 +24,17 @@ class UIController {
     initializeElements() {
         return {
             // Screens
+            nameInputScreen: document.getElementById('name-input-screen'),
             welcomeScreen: document.getElementById('welcome-screen'),
             gameScreen: document.getElementById('game-screen'),
             resultsScreen: document.getElementById('results-screen'),
+
+            // Name input elements
+            playerNameInput: document.getElementById('player-name-input'),
+            startAdventureBtn: document.getElementById('start-adventure-btn'),
+            playerNameTitle: document.getElementById('player-name-title'),
+            playerNameBattle: document.getElementById('player-name-battle'),
+            playerNameCharacter: document.getElementById('player-name-character'),
 
             // Welcome screen elements
             difficultyButtons: document.querySelectorAll('.difficulty-btn'),
@@ -57,6 +65,14 @@ class UIController {
      * Bind all event listeners
      */
     bindEvents() {
+        // Name input events
+        this.elements.startAdventureBtn.addEventListener('click', () => this.handleNameSubmit());
+        this.elements.playerNameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                this.handleNameSubmit();
+            }
+        });
+        
         // Difficulty selection
         this.elements.difficultyButtons.forEach(button => {
             button.addEventListener('click', (e) => {
@@ -362,6 +378,50 @@ class UIController {
     }
 
     /**
+     * Handle name submission from input screen
+     */
+    handleNameSubmit() {
+        const name = this.elements.playerNameInput.value.trim();
+        
+        if (name.length === 0) {
+            this.showInputError('Please enter your name');
+            return;
+        }
+        
+        if (name.length > 20) {
+            this.showInputError('Name is too long (max 20 characters)');
+            return;
+        }
+        
+        // Store the player name
+        this.game.storage.setPlayerName(name);
+        
+        // Update all name displays
+        this.updatePlayerNameDisplays(name);
+        
+        // Show welcome screen
+        this.showWelcomeScreen();
+    }
+    
+    /**
+     * Update all player name displays throughout the game
+     */
+    updatePlayerNameDisplays(name) {
+        this.elements.playerNameTitle.textContent = `${name}'s Math Quest`;
+        this.elements.playerNameBattle.textContent = `${name}'s Math Battle`;
+        this.elements.playerNameCharacter.textContent = name;
+    }
+    
+    /**
+     * Show name input screen
+     */
+    showNameInputScreen() {
+        this.hideAllScreens();
+        this.elements.nameInputScreen.classList.add('active');
+        this.elements.playerNameInput.focus();
+    }
+
+    /**
      * Show welcome screen
      */
     showWelcomeScreen() {
@@ -402,6 +462,7 @@ class UIController {
      * Hide all screens
      */
     hideAllScreens() {
+        this.elements.nameInputScreen.classList.remove('active');
         this.elements.welcomeScreen.classList.remove('active');
         this.elements.gameScreen.classList.remove('active');
         this.elements.resultsScreen.classList.remove('active');

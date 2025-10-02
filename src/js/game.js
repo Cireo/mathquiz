@@ -39,7 +39,26 @@ class Game {
         // Initialize achievements system
         this.achievements = this.initializeAchievements();
         
+        // Check if player name exists and show appropriate screen
+        this.initializePlayerName();
+        
         console.log('🎮 Math Quiz Game initialized!');
+    }
+
+    /**
+     * Initialize player name and show appropriate screen
+     */
+    initializePlayerName() {
+        const playerName = this.storage.getPlayerName();
+        
+        if (playerName) {
+            // Player name exists, update displays and show welcome screen
+            this.ui.updatePlayerNameDisplays(playerName);
+            this.ui.showWelcomeScreen();
+        } else {
+            // No player name, show name input screen
+            this.ui.showNameInputScreen();
+        }
     }
 
     /**

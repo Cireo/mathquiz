@@ -6,6 +6,7 @@ class Storage {
     constructor() {
         this.storageKey = 'mathQuizGame';
         this.defaultData = {
+            playerName: '',
             highScores: {
                 beginner: 0,
                 intermediate: 0,
@@ -219,6 +220,25 @@ class Storage {
         const data = this.loadGameData();
         Object.assign(data.settings, settings);
         this.saveGameData(data);
+    }
+
+    /**
+     * Set player name
+     * @param {string} name - Player's name
+     */
+    setPlayerName(name) {
+        const data = this.loadGameData();
+        data.playerName = name;
+        this.saveGameData(data);
+    }
+    
+    /**
+     * Get player name
+     * @returns {string} Player's name or empty string
+     */
+    getPlayerName() {
+        const data = this.loadGameData();
+        return data.playerName || '';
     }
 
     /**
