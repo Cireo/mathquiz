@@ -284,7 +284,7 @@ class UIController {
         // Create special secret activation message
         const secretMessage = document.createElement('div');
         secretMessage.className = 'secret-activation-message';
-        secretMessage.innerHTML = '🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 Player vs Math Witch! 🧙‍♀️';
+        secretMessage.innerHTML = `🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 ${this.game.storage.getPlayerName()} vs Math Witch! 🧙‍♀️`;
         
         // Style it with initial opacity 0 to prevent flash
         secretMessage.style.cssText = `
