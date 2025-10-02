@@ -240,6 +240,37 @@ class Storage {
         const data = this.loadGameData();
         return data.playerName || '';
     }
+    
+    /**
+     * Get display name with easter egg for special names
+     * @returns {string} Player's name with potential accent modification
+     */
+    getDisplayName() {
+        const name = this.getPlayerName();
+        if (!name) return '';
+        
+        // Easter egg: if name hashes to a special value, add accent to first 'e'
+        if (this.hashName(name.toLowerCase()) === 93492646) {
+            return name.replace(/e/, 'é');
+        }
+        
+        return name;
+    }
+    
+    /**
+     * Create a simple hash of a name for easter egg detection
+     * @param {string} name - Name to hash
+     * @returns {number} Simple hash value
+     */
+    hashName(name) {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            const char = name.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        return hash;
+    }
 
     /**
      * Get high scores for all difficulties

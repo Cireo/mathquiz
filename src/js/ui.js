@@ -284,7 +284,7 @@ class UIController {
         // Create special secret activation message
         const secretMessage = document.createElement('div');
         secretMessage.className = 'secret-activation-message';
-        secretMessage.innerHTML = `🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 ${this.game.storage.getPlayerName()} vs Math Witch! 🧙‍♀️`;
+        secretMessage.innerHTML = `🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 ${this.game.storage.getDisplayName()} vs Math Witch! 🧙‍♀️`;
         
         // Style it with initial opacity 0 to prevent flash
         secretMessage.style.cssText = `
@@ -407,9 +407,11 @@ class UIController {
      * Update all player name displays throughout the game
      */
     updatePlayerNameDisplays(name) {
-        this.elements.playerNameTitle.textContent = `${name}'s Math Quest`;
-        this.elements.playerNameBattle.textContent = `${name}'s Math Battle`;
-        this.elements.playerNameCharacter.textContent = name;
+        // Use display name for easter egg effect
+        const displayName = this.game.storage.getDisplayName();
+        this.elements.playerNameTitle.textContent = `${displayName}'s Math Quest`;
+        this.elements.playerNameBattle.textContent = `${displayName}'s Math Battle`;
+        this.elements.playerNameCharacter.textContent = displayName;
     }
     
     /**
