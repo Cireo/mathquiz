@@ -127,7 +127,8 @@ class UIController {
             if (e.key === 'Enter' && 
                 e.target.tagName !== 'BUTTON' && 
                 e.target.id !== 'answer-input' && 
-                e.target.id !== 'minigame-answer') {
+                e.target.id !== 'minigame-answer' &&
+                e.target.id !== 'player-name-input') {
                 e.preventDefault();
             }
         });
