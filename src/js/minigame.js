@@ -40,7 +40,7 @@ class Minigame {
         this.elements = {
             screen: document.getElementById('minigame-screen'),
             foxHealthFill: document.getElementById('fox-health-fill'),
-            spellsCount: document.getElementById('spells-count'),
+            spellIcons: document.getElementById('spell-icons'),
             foxCharacter: document.getElementById('fox-character'),
             witchCharacter: document.getElementById('witch-character'),
             battleField: document.getElementById('battle-field'),
@@ -929,8 +929,8 @@ class Minigame {
         // Update health bar
         this.elements.foxHealthFill.style.width = this.foxHealth + '%';
         
-        // Update spells remaining
-        this.elements.spellsCount.textContent = this.spellsRemaining;
+        // Update spells remaining with lightning bolt icons
+        this.elements.spellIcons.textContent = '⚡'.repeat(this.spellsRemaining);
         
         // Change health bar color based on health level
         if (this.foxHealth > 50) {

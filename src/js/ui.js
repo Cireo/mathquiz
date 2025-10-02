@@ -284,7 +284,9 @@ class UIController {
         // Create special secret activation message
         const secretMessage = document.createElement('div');
         secretMessage.className = 'secret-activation-message';
-        secretMessage.innerHTML = `🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 ${this.game.storage.getDisplayName()} vs Math Witch! 🧙‍♀️`;
+        const playerName = this.game.storage.getPlayerName();
+        const displayName = this.applyNameEasterEgg(playerName);
+        secretMessage.innerHTML = `🔥✨ SECRET BATTLE UNLOCKED! ✨🔥<br/>🦊 ${displayName} vs Math Witch! 🧙‍♀️`;
         
         // Style it with initial opacity 0 to prevent flash
         secretMessage.style.cssText = `
@@ -407,11 +409,42 @@ class UIController {
      * Update all player name displays throughout the game
      */
     updatePlayerNameDisplays(name) {
-        // Use display name for easter egg effect
-        const displayName = this.game.storage.getDisplayName();
+        // Apply easter egg effect to the provided name
+        const displayName = this.applyNameEasterEgg(name);
         this.elements.playerNameTitle.textContent = `${displayName}'s Math Quest`;
         this.elements.playerNameBattle.textContent = `${displayName}'s Math Battle`;
         this.elements.playerNameCharacter.textContent = displayName;
+    }
+    
+    /**
+     * Apply easter egg effect to a name
+     * @param {string} name - The name to potentially modify
+     * @returns {string} Name with potential accent modification
+     */
+    applyNameEasterEgg(name) {
+        if (!name) return '';
+        
+        // Easter egg: if name hashes to a special value, add accent to first 'e'
+        if (this.hashName(name.toLowerCase()) === 93492646) {
+            return name.replace(/e/, 'é');
+        }
+        
+        return name;
+    }
+    
+    /**
+     * Create a simple hash of a name for easter egg detection
+     * @param {string} name - Name to hash
+     * @returns {number} Simple hash value
+     */
+    hashName(name) {
+        let hash = 0;
+        for (let i = 0; i < name.length; i++) {
+            const char = name.charCodeAt(i);
+            hash = ((hash << 5) - hash) + char;
+            hash = hash & hash; // Convert to 32-bit integer
+        }
+        return hash;
     }
     
     /**
