@@ -223,30 +223,22 @@ class Storage {
     }
 
     /**
-     * Set player name
+     * Set player name with easter egg processing
      * @param {string} name - Player's name
      */
     setPlayerName(name) {
         const data = this.loadGameData();
-        data.playerName = name;
+        // Apply easter egg once when storing the name
+        data.playerName = this.applyNameEasterEgg(name);
         this.saveGameData(data);
     }
     
     /**
-     * Get player name
-     * @returns {string} Player's name or empty string
+     * Apply easter egg effect to a name
+     * @param {string} name - The name to potentially modify
+     * @returns {string} Name with potential accent modification
      */
-    getPlayerName() {
-        const data = this.loadGameData();
-        return data.playerName || '';
-    }
-    
-    /**
-     * Get display name with easter egg for special names
-     * @returns {string} Player's name with potential accent modification
-     */
-    getDisplayName() {
-        const name = this.getPlayerName();
+    applyNameEasterEgg(name) {
         if (!name) return '';
         
         // Easter egg: if name hashes to a special value, add accent to first 'e'
@@ -270,6 +262,15 @@ class Storage {
             hash = hash & hash; // Convert to 32-bit integer
         }
         return hash;
+    }
+    
+    /**
+     * Get player name
+     * @returns {string} Player's name or empty string
+     */
+    getPlayerName() {
+        const data = this.loadGameData();
+        return data.playerName || '';
     }
 
     /**

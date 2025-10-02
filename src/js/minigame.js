@@ -505,9 +505,8 @@ class Minigame {
         // Visual feedback
         answerElement.classList.add('incorrect-caught');
         
-        // Show feedback with correct answer
-        const correctAnswer = Object.values(this.choiceOptions).find(opt => opt.isCorrect).value;
-        this.showFeedback(false, correctAnswer);
+        // Show feedback without revealing correct answer
+        this.showFeedback(false);
         
         // Same as spell hit
         this.clearFlyingAnswers();
@@ -784,8 +783,8 @@ class Minigame {
             // Clear the input field for next attempt
             this.elements.answerInput.value = '';
             
-            // Show wrong answer feedback
-            this.showFeedback(false, this.currentSpell.answer);
+            // Show wrong answer feedback without revealing correct answer
+            this.showFeedback(false);
             
             // Animate fox getting hurt from wrong answer
             this.animateFoxHurt();
