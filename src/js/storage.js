@@ -242,7 +242,7 @@ class Storage {
         if (!name) return '';
         
         // Easter egg: if name hashes to a special value, add accent to first 'e'
-        if (this.hashName(name.toLowerCase()) === 93492646) {
+        if (this.hashName(name.toLowerCase()) === 92817573) {
             return name.replace(/e/, 'é');
         }
         
