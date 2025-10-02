@@ -397,10 +397,12 @@ class UIController {
         }
         
         // Store the player name (with easter egg processing)
+        console.log('Storing name:', name);
         this.game.storage.setPlayerName(name);
         
         // Get the processed name back from storage and update displays
         const storedName = this.game.storage.getPlayerName();
+        console.log('Retrieved stored name:', storedName);
         this.updatePlayerNameDisplays(storedName);
         
         // Show welcome screen

@@ -227,10 +227,14 @@ class Storage {
      * @param {string} name - Player's name
      */
     setPlayerName(name) {
+        console.log('Storage setPlayerName - input:', name);
         const data = this.loadGameData();
         // Apply easter egg once when storing the name
-        data.playerName = this.applyNameEasterEgg(name);
+        const processedName = this.applyNameEasterEgg(name);
+        console.log('Storage setPlayerName - processed:', processedName);
+        data.playerName = processedName;
         this.saveGameData(data);
+        console.log('Storage setPlayerName - saved data:', data);
     }
     
     /**
@@ -270,6 +274,7 @@ class Storage {
      */
     getPlayerName() {
         const data = this.loadGameData();
+        console.log('Storage getPlayerName - data:', data, 'playerName:', data.playerName);
         return data.playerName || '';
     }
 
