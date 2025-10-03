@@ -103,6 +103,11 @@ class Storage {
     mergeWithDefaults(stored) {
         const merged = JSON.parse(JSON.stringify(this.defaultData));
         
+        // Merge player name
+        if (stored.playerName) {
+            merged.playerName = stored.playerName;
+        }
+        
         // Merge high scores
         if (stored.highScores) {
             Object.assign(merged.highScores, stored.highScores);
