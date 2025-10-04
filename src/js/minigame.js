@@ -542,9 +542,8 @@ class Minigame {
         }
         this.isProcessingCollision = true;
         
-        // Find the correct answer for feedback
-        const correctAnswer = Object.values(this.choiceOptions).find(opt => opt.isCorrect).value;
-        this.showFeedback(false, correctAnswer);
+        // Show feedback without revealing correct answer
+        this.showFeedback(false);
         
         // Same as spell hit
         this.clearFlyingAnswers();
@@ -906,12 +905,12 @@ class Minigame {
     /**
      * Show feedback for player's answer
      */
-    showFeedback(isCorrect, correctAnswer = null) {
+    showFeedback(isCorrect) {
         if (isCorrect) {
             this.elements.feedback.textContent = '✨ Spell Deflected! ✨';
             this.elements.feedback.className = 'minigame-feedback correct';
         } else {
-            this.elements.feedback.textContent = `💥 Spell Hit! Answer was ${correctAnswer}`;
+            this.elements.feedback.textContent = '💥 Spell Hit! Try again! 💥';
             this.elements.feedback.className = 'minigame-feedback incorrect';
         }
         
