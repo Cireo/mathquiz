@@ -1033,6 +1033,30 @@ class Minigame {
             this.animations.celebrate('minigame_victory');
         }
         
+        // Check for character unlock (level 3 on any difficulty)
+        if (this.game.gameState.level === 3) {
+            const difficulty = this.game.gameState.difficulty;
+            
+            // Check if player already has a character from this tier
+            const tierCharacters = this.game.storage.getAvailableCharactersForTier(difficulty);
+            const unlockedCharacters = this.game.storage.getUnlockedCharacters();
+            const hasCharacterFromTier = tierCharacters.some(char => unlockedCharacters.includes(char));
+            
+            if (!hasCharacterFromTier) {
+                // Show character unlock modal after a delay
+                setTimeout(() => {
+                    this.game.ui.showCharacterUnlockModal(difficulty);
+                }, 2000);
+            } else if (this.game.storage.hasAllTierCharacters() && !this.game.storage.isWitchUnlocked()) {
+                // Player has all tiers but witch isn't unlocked yet - unlock witch directly
+                this.game.storage.unlockCharacter('witch');
+                setTimeout(() => {
+                    this.game.ui.showFeedback('🎉 SPECIAL UNLOCK: The Witch joins your team! 🧙‍♀️', 'achievement');
+                    this.game.animations.celebrate('witch_unlock');
+                }, 2000);
+            }
+        }
+        
         // Award bonus points to main game
         const bonusPoints = 50 + (this.difficulty === 'advanced' ? 30 : this.difficulty === 'intermediate' ? 15 : 0);
         this.game.gameState.score += bonusPoints;

@@ -444,6 +444,12 @@ class Animations {
             case 'lesson_complete':
                 this.createConfetti(60);
                 break;
+            case 'character_unlock':
+                this.createConfetti(80, 3000); // Character unlock celebration
+                break;
+            case 'witch_unlock':
+                this.createConfetti(120, 4000); // Special witch unlock celebration
+                break;
             case 'minigame_victory':
                 this.createConfetti(80);
                 break;

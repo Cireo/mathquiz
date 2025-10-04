@@ -38,6 +38,22 @@ class UIController {
 
             // Welcome screen elements
             difficultyButtons: document.querySelectorAll('.difficulty-btn'),
+            charactersBtn: document.getElementById('characters-btn'),
+
+            // Character selection elements
+            characterSelectionScreen: document.getElementById('character-selection-screen'),
+            backToWelcomeBtn: document.getElementById('back-to-welcome-btn'),
+            characterGrid: document.getElementById('character-grid'),
+            beginnerProgress: document.getElementById('beginner-progress'),
+            intermediateProgress: document.getElementById('intermediate-progress'),
+            advancedProgress: document.getElementById('advanced-progress'),
+            witchProgress: document.getElementById('witch-progress'),
+            
+            // Character unlock modal elements
+            characterUnlockModal: document.getElementById('character-unlock-modal'),
+            unlockTierName: document.getElementById('unlock-tier-name'),
+            characterChoices: document.getElementById('character-choices'),
+            confirmCharacterChoice: document.getElementById('confirm-character-choice'),
 
             // Game screen elements
             scoreElement: document.getElementById('score'),
@@ -80,6 +96,11 @@ class UIController {
                 this.handleDifficultySelection(difficulty);
             });
         });
+
+        // Character selection events
+        this.elements.charactersBtn.addEventListener('click', () => this.showCharacterSelection());
+        this.elements.backToWelcomeBtn.addEventListener('click', () => this.showWelcomeScreen());
+        this.elements.confirmCharacterChoice.addEventListener('click', () => this.confirmCharacterChoice());
 
         // Answer input handling
         this.elements.answerInput.addEventListener('keypress', (e) => {
@@ -427,6 +448,225 @@ class UIController {
     }
 
     /**
+     * Show character selection screen
+     */
+    showCharacterSelection() {
+        this.hideAllScreens();
+        this.elements.characterSelectionScreen.classList.add('active');
+        this.populateCharacterGrid();
+        this.updateCharacterProgress();
+    }
+
+    /**
+     * Populate the character grid with available characters
+     */
+    populateCharacterGrid() {
+        const grid = this.elements.characterGrid;
+        grid.innerHTML = '';
+        
+        const selectedCharacter = this.game.storage.getSelectedCharacter();
+        const unlockedCharacters = this.game.storage.getUnlockedCharacters();
+        
+        // Get all characters organized by tier
+        const tiers = {
+            'starter': ['fox'],
+            'beginner': this.game.storage.getAvailableCharactersForTier('beginner'),
+            'intermediate': this.game.storage.getAvailableCharactersForTier('intermediate'),
+            'advanced': this.game.storage.getAvailableCharactersForTier('advanced'),
+            'special': ['witch']
+        };
+        
+        const tierLabels = {
+            'starter': '🦊 Starter',
+            'beginner': '🌱 Beginner',
+            'intermediate': '🌿 Intermediate', 
+            'advanced': '🌳 Advanced',
+            'special': '✨ Special'
+        };
+
+        Object.entries(tiers).forEach(([tier, characters]) => {
+            characters.forEach(characterId => {
+                const isUnlocked = unlockedCharacters.includes(characterId);
+                const isSelected = characterId === selectedCharacter;
+                const emoji = this.game.storage.getCharacterEmoji(characterId);
+                
+                const card = document.createElement('div');
+                card.className = `character-card ${isSelected ? 'selected' : ''} ${!isUnlocked ? 'locked' : ''}`;
+                card.dataset.characterId = characterId;
+                
+                card.innerHTML = `
+                    <div class="character-emoji">${emoji}</div>
+                    <div class="character-name">${characterId}</div>
+                    <div class="character-tier">${tierLabels[tier]}</div>
+                `;
+                
+                if (isUnlocked) {
+                    card.addEventListener('click', () => this.selectCharacter(characterId));
+                }
+                
+                grid.appendChild(card);
+            });
+        });
+    }
+
+    /**
+     * Select a character
+     */
+    selectCharacter(characterId) {
+        // Update storage
+        this.game.storage.setSelectedCharacter(characterId);
+        
+        // Update UI
+        this.populateCharacterGrid();
+        this.updateAllCharacterDisplays();
+        
+        // Show feedback
+        const emoji = this.game.storage.getCharacterEmoji(characterId);
+        this.showFeedback(`${emoji} ${characterId} selected!`, 'success');
+    }
+
+    /**
+     * Update character progress indicators
+     */
+    updateCharacterProgress() {
+        const unlocked = this.game.storage.getUnlockedCharacters();
+        const tiers = ['beginner', 'intermediate', 'advanced'];
+        
+        tiers.forEach(tier => {
+            const tierCharacters = this.game.storage.getAvailableCharactersForTier(tier);
+            const hasUnlocked = tierCharacters.some(char => unlocked.includes(char));
+            const progressElement = this.elements[`${tier}Progress`];
+            
+            if (hasUnlocked) {
+                const unlockedChar = tierCharacters.find(char => unlocked.includes(char));
+                const emoji = this.game.storage.getCharacterEmoji(unlockedChar);
+                progressElement.textContent = `${emoji} ${unlockedChar} unlocked!`;
+                progressElement.style.color = '#48bb78';
+            } else {
+                progressElement.textContent = 'Beat Level 3 to unlock';
+                progressElement.style.color = '#718096';
+            }
+        });
+        
+        // Update witch progress
+        if (this.game.storage.isWitchUnlocked()) {
+            this.elements.witchProgress.textContent = '🧙‍♀️ Witch unlocked!';
+            this.elements.witchProgress.style.color = '#8b5cf6';
+        } else if (this.game.storage.hasAllTierCharacters()) {
+            this.elements.witchProgress.textContent = 'Ready to unlock! Beat any level 3.';
+            this.elements.witchProgress.style.color = '#f59e0b';
+        } else {
+            this.elements.witchProgress.textContent = 'Collect all 3 tiers to unlock the Witch!';
+            this.elements.witchProgress.style.color = '#718096';
+        }
+    }
+
+    /**
+     * Update all character displays throughout the game
+     */
+    updateAllCharacterDisplays() {
+        const selectedCharacter = this.game.storage.getSelectedCharacter();
+        const emoji = this.game.storage.getCharacterEmoji(selectedCharacter);
+        
+        // Update mascot on welcome screen
+        const mascot = document.querySelector('.mascot');
+        if (mascot) {
+            mascot.textContent = emoji;
+        }
+        
+        // Update character displays in minigame
+        const characterSprites = document.querySelectorAll('.character-sprite');
+        characterSprites.forEach(sprite => {
+            sprite.textContent = emoji;
+        });
+        
+        // Update character button text
+        if (this.elements.charactersBtn) {
+            this.elements.charactersBtn.innerHTML = `
+                ${emoji} Choose Character
+                <small>Unlock new companions</small>
+            `;
+        }
+    }
+
+    /**
+     * Show character unlock modal for tier selection
+     */
+    showCharacterUnlockModal(difficulty) {
+        const tierNames = {
+            beginner: '🌱 Beginner',
+            intermediate: '🌿 Intermediate',
+            advanced: '🌳 Advanced'
+        };
+        
+        this.elements.unlockTierName.textContent = tierNames[difficulty];
+        this.elements.characterChoices.innerHTML = '';
+        
+        const availableCharacters = this.game.storage.getAvailableCharactersForTier(difficulty);
+        
+        availableCharacters.forEach(characterId => {
+            const emoji = this.game.storage.getCharacterEmoji(characterId);
+            
+            const choice = document.createElement('div');
+            choice.className = 'character-choice';
+            choice.dataset.characterId = characterId;
+            choice.innerHTML = `
+                <div class="character-emoji">${emoji}</div>
+                <div class="character-name">${characterId}</div>
+            `;
+            
+            choice.addEventListener('click', () => {
+                // Remove previous selection
+                this.elements.characterChoices.querySelectorAll('.character-choice').forEach(c => {
+                    c.classList.remove('selected');
+                });
+                
+                // Select this choice
+                choice.classList.add('selected');
+                this.elements.confirmCharacterChoice.disabled = false;
+                this.selectedUnlockCharacter = characterId;
+            });
+            
+            this.elements.characterChoices.appendChild(choice);
+        });
+        
+        this.elements.characterUnlockModal.classList.add('active');
+    }
+
+    /**
+     * Confirm character choice from unlock modal
+     */
+    confirmCharacterChoice() {
+        if (this.selectedUnlockCharacter) {
+            // Unlock the character
+            this.game.storage.unlockCharacter(this.selectedUnlockCharacter);
+            
+            // Check if witch should be unlocked
+            if (this.game.storage.hasAllTierCharacters() && !this.game.storage.isWitchUnlocked()) {
+                this.game.storage.unlockCharacter('witch');
+                
+                // Show special witch unlock celebration
+                setTimeout(() => {
+                    this.showFeedback('🎉 SPECIAL UNLOCK: The Witch joins your team! 🧙‍♀️', 'achievement');
+                    this.game.animations.celebrate('witch_unlock');
+                }, 1000);
+            }
+            
+            // Close modal
+            this.elements.characterUnlockModal.classList.remove('active');
+            
+            // Show celebration
+            const emoji = this.game.storage.getCharacterEmoji(this.selectedUnlockCharacter);
+            this.showFeedback(`🎉 ${emoji} ${this.selectedUnlockCharacter} unlocked!`, 'achievement');
+            this.game.animations.celebrate('character_unlock');
+            
+            // Reset selection
+            this.selectedUnlockCharacter = null;
+            this.elements.confirmCharacterChoice.disabled = true;
+        }
+    }
+
+    /**
      * Show welcome screen
      */
     showWelcomeScreen() {
@@ -469,6 +709,7 @@ class UIController {
     hideAllScreens() {
         this.elements.nameInputScreen.classList.remove('active');
         this.elements.welcomeScreen.classList.remove('active');
+        this.elements.characterSelectionScreen.classList.remove('active');
         this.elements.gameScreen.classList.remove('active');
         this.elements.resultsScreen.classList.remove('active');
     }

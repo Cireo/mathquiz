@@ -54,6 +54,7 @@ class Game {
         if (playerName && playerName.trim() !== '') {
             // Player name exists, update displays and show welcome screen
             this.ui.updatePlayerNameDisplays(playerName);
+            this.ui.updateAllCharacterDisplays(); // Update character displays
             this.ui.showWelcomeScreen();
         } else {
             // No player name, show name input screen
