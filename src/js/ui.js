@@ -523,6 +523,14 @@ class UIController {
         this.prepareForNewQuestion();
         
         if (this.elements.problemElement) {
+            // Clear previous operation classes
+            this.elements.problemElement.classList.remove('addition', 'subtraction', 'multiplication', 'division');
+            
+            // Add operation-specific class for color coding
+            if (this.game && this.game.currentProblem && this.game.currentProblem.operation) {
+                this.elements.problemElement.classList.add(this.game.currentProblem.operation);
+            }
+            
             if (this.game && this.game.animations) {
                 this.game.animations.animateProblemTransition(this.elements.problemElement, problemText);
             } else {

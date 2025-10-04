@@ -347,8 +347,12 @@ class Minigame {
         this.elements.inputSpellMode.classList.remove('hidden');
         this.elements.choiceSpellMode.classList.add('hidden');
         
-        // Update display
+        // Update display with operation-specific styling
         this.elements.currentSpellDisplay.textContent = `Incoming spell: ${this.currentSpell.question}`;
+        this.elements.currentSpellDisplay.classList.remove('addition', 'subtraction', 'multiplication', 'division');
+        if (this.currentSpell.operation) {
+            this.elements.currentSpellDisplay.classList.add(this.currentSpell.operation);
+        }
         this.elements.answerInput.value = '';
         this.elements.submitButton.disabled = true;
         this.elements.answerInput.focus();
@@ -371,8 +375,12 @@ class Minigame {
         this.elements.inputSpellMode.classList.add('hidden');
         this.elements.choiceSpellMode.classList.remove('hidden');
         
-        // Update equation display
+        // Update equation display with operation-specific styling
         this.elements.choiceEquation.textContent = this.currentSpell.question;
+        this.elements.choiceEquation.classList.remove('addition', 'subtraction', 'multiplication', 'division');
+        if (this.currentSpell.operation) {
+            this.elements.choiceEquation.classList.add(this.currentSpell.operation);
+        }
         
         // Generate wrong answers and positions
         this.choiceOptions = this.generateChoiceOptions(this.currentSpell);
