@@ -434,15 +434,13 @@ class LessonsManager {
      * Complete the lesson
      */
     completeLesson() {
-        // Show completion message
+        // Show celebration animation
         if (this.game.animations) {
             this.game.animations.celebrate('lesson_complete');
         }
         
-        // Return to lessons screen after brief celebration
-        setTimeout(() => {
-            this.backToLessons();
-        }, 800);
+        // Return to lessons screen immediately
+        this.backToLessons();
     }
 
     /**
