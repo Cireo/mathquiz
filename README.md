@@ -248,9 +248,8 @@ This project is open source and available under the [MIT License](LICENSE).
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/mathquiz/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/mathquiz/discussions)
-- **Email**: your.email@example.com
+- **Issues**: [GitHub Issues](https://github.com/Cireo/mathquiz/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/Cireo/mathquiz/discussions)
 
 ---
 
