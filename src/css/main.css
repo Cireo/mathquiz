@@ -590,14 +590,74 @@ body {
     }
     
     .mobile-fox-controls {
-        display: flex;
+        display: flex !important;
     }
     
     .fox-control-btn {
         min-width: 60px;
-        min-height: 60px;
-        font-size: 0.9rem;
-        padding: 10px 12px;
+        min-height: 50px;
+        font-size: 0.8rem;
+        padding: 8px 10px;
+    }
+    
+    /* Optimize minigame layout for mobile */
+    .minigame-container {
+        height: 85vh;
+        padding: 10px;
+    }
+    
+    .minigame-header {
+        margin-bottom: 10px;
+    }
+    
+    .minigame-title {
+        font-size: 1.4rem;
+        margin-bottom: 10px;
+    }
+    
+    .minigame-stats {
+        padding: 8px 15px;
+        margin-bottom: 10px;
+    }
+    
+    .battle-arena {
+        height: 35vh;
+        margin: 10px 0;
+    }
+    
+    .choice-spell-equation {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .choice-instructions {
+        font-size: 0.8rem;
+        margin: 5px 0;
+        padding: 0;
+        line-height: 1.2;
+    }
+    
+    /* Hide verbose desktop instructions on mobile */
+    .desktop-instructions {
+        display: none !important;
+    }
+    
+    /* Show concise mobile instructions */
+    .mobile-instructions {
+        display: inline !important;
+        font-size: 0;
+    }
+    
+    /* Make mobile instructions more concise */
+    .mobile-instructions::after {
+        content: "Tap buttons to move up/down and catch the correct answer";
+        font-size: 0.8rem;
+    }
+    
+    .mobile-fox-controls {
+        margin-top: 10px;
+        padding: 10px;
+        gap: 10px;
     }
 }
 
