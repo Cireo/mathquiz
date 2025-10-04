@@ -125,6 +125,14 @@ class Minigame {
 
         // Mobile touch controls for choice spells
         if (this.elements.foxMoveUp) {
+            // Use touchstart for immediate response, fallback to click
+            this.elements.foxMoveUp.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (this.isActive && this.currentSpellType === 'choice') {
+                    this.moveFox('up');
+                    console.log('🦊 Fox moved up to:', this.foxPosition);
+                }
+            });
             this.elements.foxMoveUp.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (this.isActive && this.currentSpellType === 'choice') {
@@ -135,6 +143,14 @@ class Minigame {
         }
 
         if (this.elements.foxMoveDown) {
+            // Use touchstart for immediate response, fallback to click
+            this.elements.foxMoveDown.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (this.isActive && this.currentSpellType === 'choice') {
+                    this.moveFox('down');
+                    console.log('🦊 Fox moved down to:', this.foxPosition);
+                }
+            });
             this.elements.foxMoveDown.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (this.isActive && this.currentSpellType === 'choice') {
@@ -145,6 +161,13 @@ class Minigame {
         }
 
         if (this.elements.foxSpeedUp) {
+            // Use touchstart for immediate response, fallback to click
+            this.elements.foxSpeedUp.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                if (this.isActive && this.currentSpellType === 'choice') {
+                    this.speedUpFlyingAnswers();
+                }
+            });
             this.elements.foxSpeedUp.addEventListener('click', (e) => {
                 e.preventDefault();
                 if (this.isActive && this.currentSpellType === 'choice') {
