@@ -439,8 +439,10 @@ class LessonsManager {
             this.game.animations.celebrate('lesson_complete');
         }
         
-        // Return to lessons screen immediately
-        this.backToLessons();
+        // Brief delay to let confetti animation start before transitioning
+        setTimeout(() => {
+            this.backToLessons();
+        }, 300);
     }
 
     /**
