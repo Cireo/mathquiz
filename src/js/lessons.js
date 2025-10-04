@@ -442,7 +442,7 @@ class LessonsManager {
         // Brief delay to let confetti animation start before transitioning
         setTimeout(() => {
             this.backToLessons();
-        }, 300);
+        }, 700);
     }
 
     /**
