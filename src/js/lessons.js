@@ -439,10 +439,10 @@ class LessonsManager {
             this.game.animations.celebrate('lesson_complete');
         }
         
-        // Return to lessons screen
+        // Return to lessons screen after brief celebration
         setTimeout(() => {
             this.backToLessons();
-        }, 2000);
+        }, 800);
     }
 
     /**
