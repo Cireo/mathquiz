@@ -512,12 +512,6 @@ class UIController {
             const tierSection = document.createElement('div');
             tierSection.className = 'character-tier-section';
             
-            // Create tier header
-            const tierHeader = document.createElement('div');
-            tierHeader.className = 'tier-header';
-            tierHeader.textContent = tier.name;
-            tierSection.appendChild(tierHeader);
-            
             // Create characters container for this tier
             const tierCharacters = document.createElement('div');
             tierCharacters.className = 'tier-characters';

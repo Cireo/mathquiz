@@ -1375,18 +1375,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 15px;
-}
-
-.tier-header {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #4a5568;
-    text-align: center;
-    padding: 8px 16px;
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-    border-radius: 20px;
-    border: 2px solid #dee2e6;
+    gap: 0;
 }
 
 .tier-characters {
@@ -1596,11 +1585,6 @@ body {
     
     .character-emoji {
         font-size: 2.5rem;
-    }
-    
-    .tier-header {
-        font-size: 1rem;
-        padding: 6px 12px;
     }
     
     .character-unlock-content {
