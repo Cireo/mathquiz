@@ -1475,6 +1475,21 @@ body {
     .lesson-navigation {
         flex-direction: column;
     }
+    
+    /* Mobile-friendly vertical math formatting */
+    .vertical-math {
+        font-size: 1.1rem;
+        padding: 12px;
+        margin: 15px auto;
+        line-height: 1.1;
+        background: #f0f4f8;
+        border: 2px solid #667eea;
+        border-radius: 8px;
+        max-width: 100px;
+        text-align: center;
+        overflow: visible;
+        white-space: pre;
+    }
 }
 
 /* Character Selection Styles */

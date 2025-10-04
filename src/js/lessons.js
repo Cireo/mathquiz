@@ -322,7 +322,7 @@ class LessonsManager {
                                 <div class="explanation">
                                     Sometimes we need to <span class="highlight">"borrow"</span> from the tens place.
                                 </div>
-                                <div class="vertical-math">  52
+                                <div class="vertical-math" data-mobile-text="52 - 27 = 25 (borrow: 12-7=5, then 4-2=2)">  52
 - 27
 ----
   25</div>

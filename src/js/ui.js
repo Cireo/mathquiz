@@ -791,6 +791,16 @@ class UIController {
         this.elements.characterSelectionScreen.classList.remove('active');
         this.elements.gameScreen.classList.remove('active');
         this.elements.resultsScreen.classList.remove('active');
+        
+        // Hide lesson screens
+        const lessonsScreen = document.getElementById('lessons-screen');
+        const lessonContentScreen = document.getElementById('lesson-content-screen');
+        if (lessonsScreen) lessonsScreen.classList.remove('active');
+        if (lessonContentScreen) lessonContentScreen.classList.remove('active');
+        
+        // Hide modal overlays
+        this.elements.characterUnlockModal.classList.remove('active');
+        this.elements.exitConfirmationModal.classList.remove('active');
     }
 
     /**
