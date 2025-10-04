@@ -35,6 +35,8 @@ class UIController {
             playerNameTitle: document.getElementById('player-name-title'),
             playerNameBattle: document.getElementById('player-name-battle'),
             playerNameCharacter: document.getElementById('player-name-character'),
+            characterEmojiBattle: document.getElementById('character-emoji-battle'),
+            characterHealthLabel: document.getElementById('character-health-label'),
 
             // Welcome screen elements
             difficultyButtons: document.querySelectorAll('.difficulty-btn'),
@@ -600,6 +602,7 @@ class UIController {
     updateAllCharacterDisplays() {
         const selectedCharacter = this.game.storage.getSelectedCharacter();
         const emoji = this.game.storage.getCharacterEmoji(selectedCharacter);
+        const characterName = selectedCharacter.charAt(0).toUpperCase() + selectedCharacter.slice(1);
         
         // Update mascot on welcome screen
         const mascot = document.querySelector('.mascot');
@@ -611,6 +614,16 @@ class UIController {
         const foxCharacterSprite = document.querySelector('#fox-character .character-sprite');
         if (foxCharacterSprite) {
             foxCharacterSprite.textContent = emoji;
+        }
+        
+        // Update battle title emoji
+        if (this.elements.characterEmojiBattle) {
+            this.elements.characterEmojiBattle.textContent = emoji;
+        }
+        
+        // Update health label
+        if (this.elements.characterHealthLabel) {
+            this.elements.characterHealthLabel.textContent = `${characterName} Health:`;
         }
         
         // Update character button text
