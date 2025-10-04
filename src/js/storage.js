@@ -284,6 +284,26 @@ class Storage {
     }
 
     /**
+     * Clear all stored data (for testing/reset purposes)
+     */
+    clearAllData() {
+        if (this.isStorageAvailable()) {
+            localStorage.removeItem(this.storageKey);
+            console.log('All game data cleared from localStorage');
+        }
+    }
+    
+    /**
+     * Clear only player name (for testing purposes)
+     */
+    clearPlayerName() {
+        const data = this.loadGameData();
+        data.playerName = '';
+        this.saveGameData(data);
+        console.log('Player name cleared');
+    }
+
+    /**
      * Get high scores for all difficulties
      * @returns {Object} High scores object
      */

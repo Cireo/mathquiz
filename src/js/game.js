@@ -50,13 +50,16 @@ class Game {
      */
     initializePlayerName() {
         const playerName = this.storage.getPlayerName();
+        console.log('initializePlayerName - playerName:', playerName);
         
-        if (playerName) {
+        if (playerName && playerName.trim() !== '') {
             // Player name exists, update displays and show welcome screen
+            console.log('Player name exists, showing welcome screen');
             this.ui.updatePlayerNameDisplays(playerName);
             this.ui.showWelcomeScreen();
         } else {
             // No player name, show name input screen
+            console.log('No player name, showing name input screen');
             this.ui.showNameInputScreen();
         }
     }
