@@ -55,6 +55,11 @@ class Minigame {
             choiceSpellMode: document.getElementById('choice-spell-mode'),
             choiceEquation: document.getElementById('choice-equation'),
             
+            // Mobile controls
+            foxMoveUp: document.getElementById('fox-move-up'),
+            foxMoveDown: document.getElementById('fox-move-down'),
+            foxSpeedUp: document.getElementById('fox-speed-up'),
+            
             feedback: document.getElementById('minigame-feedback')
         };
     }
@@ -117,6 +122,36 @@ class Minigame {
                     break;
             }
         });
+
+        // Mobile touch controls for choice spells
+        if (this.elements.foxMoveUp) {
+            this.elements.foxMoveUp.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (this.isActive && this.currentSpellType === 'choice') {
+                    this.moveFox('up');
+                    console.log('🦊 Fox moved up to:', this.foxPosition);
+                }
+            });
+        }
+
+        if (this.elements.foxMoveDown) {
+            this.elements.foxMoveDown.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (this.isActive && this.currentSpellType === 'choice') {
+                    this.moveFox('down');
+                    console.log('🦊 Fox moved down to:', this.foxPosition);
+                }
+            });
+        }
+
+        if (this.elements.foxSpeedUp) {
+            this.elements.foxSpeedUp.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (this.isActive && this.currentSpellType === 'choice') {
+                    this.speedUpFlyingAnswers();
+                }
+            });
+        }
     }
 
     /**

@@ -579,6 +579,26 @@ body {
     .stat-item {
         justify-content: center;
     }
+    
+    /* Mobile fox controls for battle */
+    .desktop-instructions {
+        display: none;
+    }
+    
+    .mobile-instructions {
+        display: inline;
+    }
+    
+    .mobile-fox-controls {
+        display: flex;
+    }
+    
+    .fox-control-btn {
+        min-width: 60px;
+        min-height: 60px;
+        font-size: 0.9rem;
+        padding: 10px 12px;
+    }
 }
 
 /* Minigame Styles */
@@ -954,6 +974,57 @@ body {
     color: #4ecdc4;
     font-weight: bold;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Mobile/Desktop instruction visibility */
+.desktop-instructions {
+    display: inline;
+}
+
+.mobile-instructions {
+    display: none;
+}
+
+/* Mobile fox controls */
+.mobile-fox-controls {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+.fox-control-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: 2px solid #4ecdc4;
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 12px 16px;
+    min-width: 70px;
+    min-height: 70px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.fox-control-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 205, 196, 0.3);
+}
+
+.fox-control-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 6px rgba(78, 205, 196, 0.3);
+}
+
+.fox-control-btn.speed-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    border-color: #ff6b6b;
 }
 
 @keyframes correctChoice {

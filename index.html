@@ -159,7 +159,17 @@
                 <!-- Multiple choice spell -->
                 <div id="choice-spell-mode" class="spell-mode hidden">
                     <div class="choice-spell-equation" id="choice-equation">5 × 4 = ?</div>
-                    <div class="choice-instructions">Use ↑↓ arrow keys to move the fox vertically!<br/>Position yourself to catch the correct answer!</div>
+                    <div class="choice-instructions">
+                        <span class="desktop-instructions">Use ↑↓ arrow keys to move the fox vertically!<br/>Position yourself to catch the correct answer!</span>
+                        <span class="mobile-instructions">Tap the buttons below to move the fox up and down!<br/>Position yourself to catch the correct answer!</span>
+                    </div>
+                    
+                    <!-- Mobile touch controls -->
+                    <div id="mobile-fox-controls" class="mobile-fox-controls">
+                        <button id="fox-move-up" class="fox-control-btn" type="button">↑<br/>Up</button>
+                        <button id="fox-move-down" class="fox-control-btn" type="button">↓<br/>Down</button>
+                        <button id="fox-speed-up" class="fox-control-btn speed-btn" type="button">⚡<br/>Speed Up</button>
+                    </div>
                 </div>
             </div>
 
