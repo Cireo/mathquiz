@@ -102,7 +102,7 @@ class LessonsManager {
                                     Multiplication is <span class="highlight">repeated addition</span>! 
                                     When we multiply, we're adding the same number multiple times.
                                 </div>
-                                <div class="math-example">3 × 4 = 3 + 3 + 3 + 3 = 12</div>
+                                <div class="math-example">3 × 4 =<br/>3 + 3 + 3 + 3 =<br/>12</div>
                                 <div class="explanation">
                                     This means "3 groups of 4" or "4 groups of 3" - both give us 12!
                                 </div>
@@ -322,7 +322,7 @@ class LessonsManager {
                                 <div class="explanation">
                                     Sometimes we need to <span class="highlight">"borrow"</span> from the tens place.
                                 </div>
-                                <div class="vertical-math" data-mobile-text="52 - 27 = 25 (borrow: 12-7=5, then 4-2=2)">  52
+                                <div class="vertical-math">  52
 - 27
 ----
   25</div>
