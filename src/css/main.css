@@ -1362,13 +1362,38 @@ body {
 
 /* Character Selection Styles */
 .character-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
     margin: 30px 0;
     max-width: 600px;
     margin-left: auto;
     margin-right: auto;
+}
+
+.character-tier-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.tier-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #4a5568;
+    text-align: center;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 20px;
+    border: 2px solid #dee2e6;
+}
+
+.tier-characters {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .character-card {
@@ -1557,16 +1582,25 @@ body {
 /* Responsive Design for Character Selection */
 @media (max-width: 768px) {
     .character-grid {
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 25px;
+    }
+    
+    .tier-characters {
         gap: 15px;
     }
     
     .character-card {
         padding: 15px;
+        min-width: 100px;
     }
     
     .character-emoji {
         font-size: 2.5rem;
+    }
+    
+    .tier-header {
+        font-size: 1rem;
+        padding: 6px 12px;
     }
     
     .character-unlock-content {

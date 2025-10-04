@@ -479,24 +479,50 @@ class UIController {
         const unlockedCharacters = this.game.storage.getUnlockedCharacters();
         
         // Get all characters organized by tier
-        const tiers = {
-            'starter': ['fox'],
-            'beginner': this.game.storage.getAvailableCharactersForTier('beginner'),
-            'intermediate': this.game.storage.getAvailableCharactersForTier('intermediate'),
-            'advanced': this.game.storage.getAvailableCharactersForTier('advanced'),
-            'special': ['witch']
-        };
-        
-        const tierLabels = {
-            'starter': '🦊 Starter',
-            'beginner': '🌱 Beginner',
-            'intermediate': '🌿 Intermediate', 
-            'advanced': '🌳 Advanced',
-            'special': '✨ Special'
-        };
+        const tiers = [
+            {
+                id: 'starter',
+                name: '🦊 Starter',
+                characters: ['fox']
+            },
+            {
+                id: 'beginner',
+                name: '🌱 Beginner Tier',
+                characters: this.game.storage.getAvailableCharactersForTier('beginner')
+            },
+            {
+                id: 'intermediate',
+                name: '🌿 Intermediate Tier',
+                characters: this.game.storage.getAvailableCharactersForTier('intermediate')
+            },
+            {
+                id: 'advanced',
+                name: '🌳 Advanced Tier',
+                characters: this.game.storage.getAvailableCharactersForTier('advanced')
+            },
+            {
+                id: 'special',
+                name: '✨ Special',
+                characters: ['witch']
+            }
+        ];
 
-        Object.entries(tiers).forEach(([tier, characters]) => {
-            characters.forEach(characterId => {
+        tiers.forEach(tier => {
+            // Create tier section
+            const tierSection = document.createElement('div');
+            tierSection.className = 'character-tier-section';
+            
+            // Create tier header
+            const tierHeader = document.createElement('div');
+            tierHeader.className = 'tier-header';
+            tierHeader.textContent = tier.name;
+            tierSection.appendChild(tierHeader);
+            
+            // Create characters container for this tier
+            const tierCharacters = document.createElement('div');
+            tierCharacters.className = 'tier-characters';
+            
+            tier.characters.forEach(characterId => {
                 const isUnlocked = unlockedCharacters.includes(characterId);
                 const isSelected = characterId === selectedCharacter;
                 const emoji = this.game.storage.getCharacterEmoji(characterId);
@@ -508,15 +534,17 @@ class UIController {
                 card.innerHTML = `
                     <div class="character-emoji">${emoji}</div>
                     <div class="character-name">${characterId}</div>
-                    <div class="character-tier">${tierLabels[tier]}</div>
                 `;
                 
                 if (isUnlocked) {
                     card.addEventListener('click', () => this.selectCharacter(characterId));
                 }
                 
-                grid.appendChild(card);
+                tierCharacters.appendChild(card);
             });
+            
+            tierSection.appendChild(tierCharacters);
+            grid.appendChild(tierSection);
         });
     }
 
@@ -585,11 +613,11 @@ class UIController {
             mascot.textContent = emoji;
         }
         
-        // Update character displays in minigame
-        const characterSprites = document.querySelectorAll('.character-sprite');
-        characterSprites.forEach(sprite => {
-            sprite.textContent = emoji;
-        });
+        // Update player character in minigame (fox character, not witch)
+        const foxCharacterSprite = document.querySelector('#fox-character .character-sprite');
+        if (foxCharacterSprite) {
+            foxCharacterSprite.textContent = emoji;
+        }
         
         // Update character button text
         if (this.elements.charactersBtn) {
