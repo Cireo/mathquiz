@@ -1327,6 +1327,233 @@ body {
     }
 }
 
+/* Character Selection Styles */
+.character-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.character-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 3px solid #dee2e6;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.character-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.character-card.selected {
+    border-color: #ffd700;
+    background: linear-gradient(135deg, #fff9e6, #ffeaa7);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.character-card.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: linear-gradient(135deg, #f1f3f4, #e8eaed);
+}
+
+.character-card.locked:hover {
+    transform: none;
+    box-shadow: none;
+}
+
+.character-emoji {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.character-name {
+    font-weight: bold;
+    color: #2d3748;
+    margin-bottom: 5px;
+    text-transform: capitalize;
+}
+
+.character-tier {
+    font-size: 0.8rem;
+    color: #718096;
+    font-style: italic;
+}
+
+.character-info {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.unlock-progress {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.tier-progress {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    padding: 8px 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.tier-progress:last-child {
+    border-bottom: none;
+}
+
+.tier-progress.special {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(75, 0, 130, 0.1));
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 15px;
+}
+
+.tier-label {
+    font-weight: bold;
+    color: #2d3748;
+}
+
+/* Character Unlock Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.character-unlock-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.unlock-title {
+    color: #667eea;
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.unlock-message {
+    color: #4a5568;
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+
+.character-choices {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.character-choice {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 3px solid #dee2e6;
+    border-radius: 15px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+}
+
+.character-choice:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.character-choice.selected {
+    border-color: #ffd700;
+    background: linear-gradient(135deg, #fff9e6, #ffeaa7);
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.character-choice .character-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+.character-choice .character-name {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.unlock-actions {
+    margin-top: 30px;
+}
+
+#confirm-character-choice:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background: #e2e8f0;
+    color: #a0aec0;
+}
+
+#confirm-character-choice:disabled:hover {
+    transform: none;
+}
+
+/* Responsive Design for Character Selection */
+@media (max-width: 768px) {
+    .character-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 15px;
+    }
+    
+    .character-card {
+        padding: 15px;
+    }
+    
+    .character-emoji {
+        font-size: 2.5rem;
+    }
+    
+    .character-unlock-content {
+        padding: 30px 20px;
+    }
+    
+    .character-choices {
+        gap: 15px;
+    }
+    
+    .character-choice {
+        padding: 15px;
+        min-width: 80px;
+    }
+    
+    .character-choice .character-emoji {
+        font-size: 2rem;
+    }
+}
+
 /* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     * {

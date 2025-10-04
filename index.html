@@ -55,6 +55,10 @@
                     📚 Interactive Lessons
                     <small>Learn new strategies</small>
                 </button>
+                <button id="characters-btn" class="menu-btn">
+                    🦊 Choose Character
+                    <small>Unlock new companions</small>
+                </button>
             </div>
         </div>
     </div>
@@ -242,6 +246,58 @@
                     <button id="next-step-btn" class="nav-btn">Next →</button>
                     <button id="complete-lesson-btn" class="nav-btn complete-btn" style="display: none;">Complete Lesson ✓</button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Selection Screen -->
+    <div id="character-selection-screen" class="screen">
+        <div class="container">
+            <div class="lesson-header">
+                <button id="back-to-welcome-btn" class="back-btn">← Back to Main Menu</button>
+                <h1 class="lesson-title">🦊 Choose Your Character</h1>
+            </div>
+            
+            <div id="character-grid" class="character-grid">
+                <!-- Characters will be populated dynamically -->
+            </div>
+            
+            <div class="character-info">
+                <p>Complete battles to unlock new animal companions!</p>
+                <div class="unlock-progress">
+                    <div class="tier-progress">
+                        <span class="tier-label">🌱 Beginner Tier:</span>
+                        <span id="beginner-progress">Beat Level 3 to unlock</span>
+                    </div>
+                    <div class="tier-progress">
+                        <span class="tier-label">🌿 Intermediate Tier:</span>
+                        <span id="intermediate-progress">Beat Level 3 to unlock</span>
+                    </div>
+                    <div class="tier-progress">
+                        <span class="tier-label">🌳 Advanced Tier:</span>
+                        <span id="advanced-progress">Beat Level 3 to unlock</span>
+                    </div>
+                    <div class="tier-progress special">
+                        <span class="tier-label">✨ Special:</span>
+                        <span id="witch-progress">Collect all 3 tiers to unlock the Witch!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Character Unlock Choice Modal -->
+    <div id="character-unlock-modal" class="modal-overlay">
+        <div class="modal-content character-unlock-content">
+            <h2 class="unlock-title">🎉 Character Unlocked!</h2>
+            <p class="unlock-message">Choose your new companion from the <span id="unlock-tier-name"></span> tier:</p>
+            
+            <div id="character-choices" class="character-choices">
+                <!-- Character choices will be populated dynamically -->
+            </div>
+            
+            <div class="unlock-actions">
+                <button id="confirm-character-choice" class="action-button" disabled>Choose This Character</button>
             </div>
         </div>
     </div>

@@ -30,6 +30,28 @@ class Storage {
                     division: { correct: 0, total: 0 }
                 }
             },
+            characters: {
+                selectedCharacter: 'fox',
+                unlockedCharacters: ['fox'],
+                availableCharacters: {
+                    beginner: ['rabbit', 'squirrel', 'hedgehog'],
+                    intermediate: ['raccoon', 'bear', 'deer'], 
+                    advanced: ['wolf', 'eagle', 'owl']
+                },
+                characterEmojis: {
+                    fox: '🦊',
+                    rabbit: '🐰',
+                    squirrel: '🐿️',
+                    hedgehog: '🦔',
+                    raccoon: '🦝',
+                    bear: '🐻',
+                    deer: '🦌',
+                    wolf: '🐺',
+                    eagle: '🦅',
+                    owl: '🦉',
+                    witch: '🧙‍♀️'
+                }
+            },
             lastPlayed: null
         };
     }
@@ -130,6 +152,18 @@ class Storage {
             // Merge operation stats
             if (stored.statistics.operationStats) {
                 Object.assign(merged.statistics.operationStats, stored.statistics.operationStats);
+            }
+        }
+
+        // Merge characters
+        if (stored.characters) {
+            Object.assign(merged.characters, stored.characters);
+            // Ensure critical character data exists
+            if (!merged.characters.selectedCharacter) {
+                merged.characters.selectedCharacter = 'fox';
+            }
+            if (!merged.characters.unlockedCharacters || merged.characters.unlockedCharacters.length === 0) {
+                merged.characters.unlockedCharacters = ['fox'];
             }
         }
 
@@ -297,6 +331,92 @@ class Storage {
         data.playerName = '';
         this.saveGameData(data);
         console.log('Player name cleared');
+    }
+
+    /**
+     * Get selected character
+     * @returns {string} Selected character ID
+     */
+    getSelectedCharacter() {
+        const data = this.loadGameData();
+        return data.characters.selectedCharacter || 'fox';
+    }
+
+    /**
+     * Set selected character
+     * @param {string} characterId - Character ID to select
+     */
+    setSelectedCharacter(characterId) {
+        const data = this.loadGameData();
+        if (data.characters.unlockedCharacters.includes(characterId)) {
+            data.characters.selectedCharacter = characterId;
+            this.saveGameData(data);
+        }
+    }
+
+    /**
+     * Get unlocked characters
+     * @returns {Array} Array of unlocked character IDs
+     */
+    getUnlockedCharacters() {
+        const data = this.loadGameData();
+        return data.characters.unlockedCharacters || ['fox'];
+    }
+
+    /**
+     * Unlock a new character
+     * @param {string} characterId - Character ID to unlock
+     */
+    unlockCharacter(characterId) {
+        const data = this.loadGameData();
+        if (!data.characters.unlockedCharacters.includes(characterId)) {
+            data.characters.unlockedCharacters.push(characterId);
+            this.saveGameData(data);
+        }
+    }
+
+    /**
+     * Get character emoji by ID
+     * @param {string} characterId - Character ID
+     * @returns {string} Character emoji
+     */
+    getCharacterEmoji(characterId) {
+        const data = this.loadGameData();
+        return data.characters.characterEmojis[characterId] || '🦊';
+    }
+
+    /**
+     * Get available characters for a difficulty tier
+     * @param {string} difficulty - Difficulty level (beginner, intermediate, advanced)
+     * @returns {Array} Array of character IDs available for that tier
+     */
+    getAvailableCharactersForTier(difficulty) {
+        const data = this.loadGameData();
+        return data.characters.availableCharacters[difficulty] || [];
+    }
+
+    /**
+     * Check if player has unlocked characters from all three tiers
+     * @returns {boolean} True if player has characters from all tiers
+     */
+    hasAllTierCharacters() {
+        const data = this.loadGameData();
+        const unlocked = data.characters.unlockedCharacters;
+        const tiers = ['beginner', 'intermediate', 'advanced'];
+        
+        return tiers.every(tier => {
+            const tierCharacters = data.characters.availableCharacters[tier];
+            return tierCharacters.some(char => unlocked.includes(char));
+        });
+    }
+
+    /**
+     * Check if witch character is unlocked
+     * @returns {boolean} True if witch is unlocked
+     */
+    isWitchUnlocked() {
+        const data = this.loadGameData();
+        return data.characters.unlockedCharacters.includes('witch');
     }
 
     /**
