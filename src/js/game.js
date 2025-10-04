@@ -122,6 +122,38 @@ class Game {
     }
 
     /**
+     * End the current game and clean up state
+     */
+    endGame() {
+        if (this.gameState.isActive) {
+            // Update final statistics
+            this.updateStatistics();
+            
+            // Mark game as inactive
+            this.gameState.isActive = false;
+            
+            // Clear any active timers or intervals
+            this.clearGameTimers();
+            
+            // Save game data with final state
+            const gameData = this.storage.loadGameData();
+            gameData.lastPlayed = Date.now();
+            this.storage.saveGameData(gameData);
+            
+            console.log('🎮 Game ended and state cleaned up');
+        }
+    }
+
+    /**
+     * Clear any active game timers
+     */
+    clearGameTimers() {
+        // Clear any setTimeout/setInterval if they exist
+        // This is a placeholder for any future timer cleanup
+        // Currently no persistent timers to clear
+    }
+
+    /**
      * Reset game state to initial values
      */
     resetGameState() {

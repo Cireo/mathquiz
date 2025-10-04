@@ -55,6 +55,12 @@ class UIController {
             characterChoices: document.getElementById('character-choices'),
             confirmCharacterChoice: document.getElementById('confirm-character-choice'),
 
+            // Exit confirmation modal elements
+            exitGameBtn: document.getElementById('exit-game-btn'),
+            exitConfirmationModal: document.getElementById('exit-confirmation-modal'),
+            cancelExitBtn: document.getElementById('cancel-exit-btn'),
+            confirmExitBtn: document.getElementById('confirm-exit-btn'),
+
             // Game screen elements
             scoreElement: document.getElementById('score'),
             streakElement: document.getElementById('streak'),
@@ -101,6 +107,11 @@ class UIController {
         this.elements.charactersBtn.addEventListener('click', () => this.showCharacterSelection());
         this.elements.backToWelcomeBtn.addEventListener('click', () => this.showWelcomeScreen());
         this.elements.confirmCharacterChoice.addEventListener('click', () => this.confirmCharacterChoice());
+
+        // Exit game events
+        this.elements.exitGameBtn.addEventListener('click', () => this.showExitConfirmation());
+        this.elements.cancelExitBtn.addEventListener('click', () => this.hideExitConfirmation());
+        this.elements.confirmExitBtn.addEventListener('click', () => this.confirmExit());
 
         // Answer input handling
         this.elements.answerInput.addEventListener('keypress', (e) => {
@@ -664,6 +675,39 @@ class UIController {
             this.selectedUnlockCharacter = null;
             this.elements.confirmCharacterChoice.disabled = true;
         }
+    }
+
+    /**
+     * Show exit confirmation modal
+     */
+    showExitConfirmation() {
+        this.elements.exitConfirmationModal.classList.add('active');
+    }
+
+    /**
+     * Hide exit confirmation modal
+     */
+    hideExitConfirmation() {
+        this.elements.exitConfirmationModal.classList.remove('active');
+    }
+
+    /**
+     * Confirm exit and return to welcome screen
+     */
+    confirmExit() {
+        // Hide the confirmation modal
+        this.hideExitConfirmation();
+        
+        // Clean up game state
+        if (this.game) {
+            this.game.endGame();
+        }
+        
+        // Show welcome screen
+        this.showWelcomeScreen();
+        
+        // Show feedback
+        this.showFeedback('Game exited. Your progress has been saved!', 'info');
     }
 
     /**

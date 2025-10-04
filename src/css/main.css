@@ -205,9 +205,42 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    padding: 15px;
-    background: #f7fafc;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
     border-radius: 10px;
+    color: white;
+}
+
+.stats-group {
+    display: flex;
+    gap: 30px;
+    align-items: center;
+}
+
+.exit-button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.exit-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+}
+
+.exit-button:active {
+    transform: scale(0.95);
 }
 
 .stat-item {
@@ -1551,6 +1584,81 @@ body {
     
     .character-choice .character-emoji {
         font-size: 2rem;
+    }
+}
+
+/* Exit Confirmation Modal Styles */
+.exit-confirmation-content {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.exit-title {
+    color: #e53e3e;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+}
+
+.exit-message {
+    color: #4a5568;
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.exit-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.exit-actions .action-button {
+    min-width: 120px;
+}
+
+.exit-actions .action-button.secondary {
+    background: #e2e8f0;
+    color: #4a5568;
+}
+
+.exit-actions .action-button.secondary:hover {
+    background: #cbd5e0;
+    transform: translateY(-2px);
+}
+
+/* Responsive Design for Exit Modal */
+@media (max-width: 768px) {
+    .exit-confirmation-content {
+        padding: 30px 20px;
+    }
+    
+    .exit-actions {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .exit-actions .action-button {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .game-header {
+        padding: 15px;
+    }
+    
+    .stats-group {
+        gap: 20px;
+    }
+    
+    .exit-button {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
     }
 }
 
